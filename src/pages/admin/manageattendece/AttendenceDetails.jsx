@@ -20,15 +20,20 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { useParams , Link } from "react-router-dom";
+import { useParams , Link, useNavigate } from "react-router-dom";
+import { CiEdit } from "react-icons/ci";
+import { Button } from "@/components/ui/button";
 
 const AttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   let { id } = useParams();
+
+
 
   const fetchAttendanceData = async (date) => {
     setLoading(true);
@@ -43,7 +48,7 @@ const AttendanceDetails = () => {
         `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
 
-      console.log(response.data.monthAttendance);
+    
 
       if (response.data.success && response.data.monthAttendance.length > 0) {
         setAttendanceData(response.data.monthAttendance);
@@ -71,6 +76,15 @@ const AttendanceDetails = () => {
 
     fetchUserInfo();
   }, [selectedDate, id]);
+
+
+  // Edit User Attendace 
+
+  const handleEditAttendance = (id) => {
+    navigate(`/dashboard/admin/edit-attendance/${id}`)
+  };
+  
+
 
   return (
     <>
@@ -132,6 +146,7 @@ const AttendanceDetails = () => {
                   <TableHead className="py-2 px-4">Check-in</TableHead>
                   <TableHead className="py-2 px-4">Check-out</TableHead>
                   <TableHead className="py-2 px-4">Duration</TableHead>
+                  <TableHead className="py-2 px-4">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,6 +168,20 @@ const AttendanceDetails = () => {
                       {attendance.duration?.hours} hrs{" "}
                       {attendance.duration?.minutes} mins
                     </TableCell>
+
+                    <TableCell className="py-2 px-4">
+
+                    <button  onClick={() => handleEditAttendance(id)} className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out">
+
+                    <CiEdit size={20}  className="text-blue-600 mr-2"/>
+                  
+                    edit 
+                    </button>
+                    
+
+                   
+                    </TableCell>
+
                   </TableRow>
                 ))}
               </TableBody>

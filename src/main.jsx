@@ -8,7 +8,6 @@ import { AuthProvider } from "./auth/AuthContext";
 import Layout from "./loyout/Layout";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
-
 // Admin routes
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -29,6 +28,7 @@ import AttendanceDetails from "./pages/admin/manageattendece/AttendenceDetails";
 import AbsentUser from "./pages/admin/manageattendece/AbsentUser";
 import PresentUser from "./pages/admin/manageattendece/PresentUser";
 import ViewTodayAttendance from "./pages/admin/manageattendece/ViewTodayAttendance";
+import EditAttendenceForm from "./pages/admin/manageattendece/EditAttendenceForm";
 
 // Leave and Perfomance Routes
 import ManageLeave from "./pages/admin/manageleave/ManageLeave";
@@ -51,7 +51,6 @@ import AbsentTeamMember from "./pages/teamlead/teamattendance/AbsentTeamMember";
 import ViewTodayTeamAttendance from "./pages/teamlead/teamattendance/ViewTodayTeamAttendane";
 import PresentTeamMember from "./pages/teamlead/teamattendance/PresentTeamMember";
 import GetMyAttendance from "./pages/teamlead/teamattendance/GetMyAttendance";
-
 
 // Authentication Routes ....
 import Login from "./pages/Login";
@@ -79,6 +78,7 @@ const router = createBrowserRouter([
           { path: "attendencedetails/:id", element: <AttendanceDetails /> },
           { path: "viewtodayattendence", element: <ViewTodayAttendance /> },
           { path: "absentusers", element: <AbsentUser /> },
+          { path: "edit-attendance/:id", element: <EditAttendenceForm /> },
           { path: "presentusers", element: <PresentUser /> },
           { path: "performance", element: <CheckPerformance /> },
         ],
@@ -115,7 +115,7 @@ const router = createBrowserRouter([
       },
     ],
   },
- 
+
   {
     path: "/",
     element: <Layout />,
