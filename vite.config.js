@@ -7,11 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": {
-        target: "https://backend-production-6e95.up.railway.app",
-        changeOrigin: true, 
-        secure: true,       
-      },
+      "/api":"https://flow-backend-ic-production.up.railway.app"
     },
   },
   resolve: {

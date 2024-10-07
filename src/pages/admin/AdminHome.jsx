@@ -20,7 +20,7 @@ const AdminHome = () => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/user/getMyAllUsers');
+        const response = await axios.get('/api/user/getMyAllUsers',{withCredentials:true});
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
@@ -37,7 +37,7 @@ const AdminHome = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/api/attendance/getMyTeamMemberAttendanceStatus");
+        const response = await axios.get("/api/attendance/getMyTeamMemberAttendanceStatus",{withCredentials:true});
         if (response.data && response.data.onlineUserAttendanceRecord) {
           setTotalOnlineUser(response.data.onlineUserAttendanceRecord.length);
           setTotalUser(response.data.totalUser);
@@ -54,7 +54,7 @@ const AdminHome = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get("/api/attendance/getAllTodayAbsentUsers");
+        const response = await axios.get("/api/attendance/getAllTodayAbsentUsers",{withCredentials:true});
         setAbsent(response.data.count);
       } catch (err) {
         setError("An error occurred while fetching absent users data.");
