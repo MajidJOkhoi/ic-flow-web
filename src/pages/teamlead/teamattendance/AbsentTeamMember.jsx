@@ -16,7 +16,6 @@ import { Breadcrumb, BreadcrumbItem , BreadcrumbList, BreadcrumbSeparator } from
 import { Link } from "react-router-dom";
 import api from '../../../api'
 
-
 const AbsentTeamMember = () => {
   const [absentUsers, setAbsentUsers] = useState([]);
   const [loading, setLoading] = useState(false);
