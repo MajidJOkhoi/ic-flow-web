@@ -7,10 +7,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { toast } from "react-toastify";
-import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
+import api from '../../../api'
 
 const EditAttendanceForm = () => {
   const [attendanceData, setAttendanceData] = useState({
@@ -56,7 +56,7 @@ const EditAttendanceForm = () => {
   
    
     try {
-      const response = await axios.put("/api/attendance/update", {
+      const response = await api.put("/api/attendance/update", {
         date: selectedDate,
         ...updatedData,
       });

@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Breadcrumb,
@@ -21,6 +20,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
+import api from '../../../api'
+
+
 
 const AbsentUser = () => {
   const [absentUsers, setAbsentUsers] = useState([]);
@@ -34,7 +36,7 @@ const AbsentUser = () => {
     const fetchAbsentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/attendance/getAllTodayAbsentUsers`);
+        const response = await api.get(`/api/attendance/getAllTodayAbsentUsers`);
         if (response.data && response.data.absentUsers) {
           setAbsentUsers(response.data.absentUsers);
           setFilteredUsers(response.data.absentUsers);

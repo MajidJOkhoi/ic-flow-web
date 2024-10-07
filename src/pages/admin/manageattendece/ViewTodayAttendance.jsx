@@ -18,10 +18,10 @@ import {
 } from "@/components/ui/table";
 
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import api from '../../../api'
 
 const jobTypeMap = {
   1: "Full Time",
@@ -53,7 +53,7 @@ const designationMap = {
 };
 
 const deleteAttendance = async (id) => {
-  await axios.delete(`/api/attendance/delete/${id}`);
+  await api.delete(`/api/attendance/delete/${id}`);
   toast.success("Attendance deleted successfully");
 };
 
@@ -73,7 +73,7 @@ const ViewTodayAttendance = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getMyTeamMemberAttendanceStatus`
         );
 
@@ -100,7 +100,7 @@ const ViewTodayAttendance = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayAbsentUsers`
         );
 
@@ -115,7 +115,7 @@ const ViewTodayAttendance = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayPresentUsers`
         );
 

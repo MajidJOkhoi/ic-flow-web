@@ -12,10 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
+import api from '../../../api'
 
 const PresentUser = () => {
   const [presentUsers, setPresentUsers] = useState([]);
@@ -29,7 +29,7 @@ const PresentUser = () => {
     const fetchPresentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/attendance/getAllTodayPresentUsers`);
+        const response = await api.get(`/api/attendance/getAllTodayPresentUsers`);
         
         if (response.data && response.data.presentUsers) {
           setPresentUsers(response.data.presentUsers);

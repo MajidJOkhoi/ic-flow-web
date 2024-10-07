@@ -19,10 +19,10 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { useParams , Link, useNavigate } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
-import { Button } from "@/components/ui/button";
+import api from '../../../api'
+
 
 const AttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -44,7 +44,7 @@ const AttendanceDetails = () => {
         .toLowerCase();
       const year = date.getFullYear();
 
-      const response = await axios.get(
+      const response = await api.get(
         `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
 
@@ -67,7 +67,7 @@ const AttendanceDetails = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await api.get(`/api/user/getUserById/${id}`);
         setUserData(response.data.user);
       } catch (error) {
         console.log(error);

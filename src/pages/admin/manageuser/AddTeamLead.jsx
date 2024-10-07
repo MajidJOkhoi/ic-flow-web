@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../../../auth/AuthContext";
+import api from '../../../api'
 
 
 const AddTeamLead = () => {
@@ -46,7 +45,7 @@ const AddTeamLead = () => {
   useEffect(() => {
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await api.get(`/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id
@@ -59,7 +58,7 @@ const AddTeamLead = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await api.get(`/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id
@@ -72,7 +71,7 @@ const AddTeamLead = () => {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await api.get(`/api/role/getAllRoles`);
         const teamLeadRole = response.data.roles
           .filter(role => role.id === "2")
           .map(role => ({
@@ -104,7 +103,7 @@ const AddTeamLead = () => {
     console.log("Formatted Form Data:", formattedData);
 
     try {
-      await axios.post(`/api/user/create`, formattedData);
+      await api.post(`/api/user/create`, formattedData);
       toast.success("User created successfully");
       navigate("/dashboard/admin/team");
     } catch (error) {

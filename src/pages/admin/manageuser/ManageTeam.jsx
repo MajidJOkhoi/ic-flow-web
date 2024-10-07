@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -44,7 +43,7 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "../../../auth/AuthContext";
+import api from '../../../api'
 
 const ManageTeam = () => {
   const navigate = useNavigate();
@@ -62,7 +61,7 @@ const ManageTeam = () => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/user/getMyAllUsers`);
+        const response = await api.get(`/api/user/getMyAllUsers`);
         console.log(response.data.myUsers);
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
@@ -157,7 +156,7 @@ const ManageTeam = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.put(`/api/user/delete/${id}`);
+      await api.put(`/api/user/delete/${id}`);
       toast.success("User deleted successfully");
       setRequests((prev) => prev.filter((request) => request._id !== id));
     } catch (error) {

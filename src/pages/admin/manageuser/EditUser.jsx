@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -7,7 +6,6 @@ import Select from "react-select";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
@@ -20,18 +18,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../../../auth/AuthContext";
-
+import api from "../../../api";
 
 const EditUser = () => {
   const navigate = useNavigate();
   const [jobTypeOptions, setJobTypeOptions] = useState([]);
   const [designationOptions, setDesignationOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
-  const [currUser, setCurrUser] = useState(null); 
+  const [currUser, setCurrUser] = useState(null);
   const { id } = useParams();
 
-  const { control, handleSubmit, register, reset, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       fullName: "",
       email: "",
@@ -48,20 +51,22 @@ const EditUser = () => {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
-        
+        const response = await api.get(`/api/user/getUserById/${id}`);
+
         const userData = response.data?.user;
-    
+
         setCurrUser(userData);
-        
-        
+
         reset({
           fullName: userData.fullName,
           email: userData.email,
           contact: userData.contact,
           address: userData.address,
           jobType: { value: userData.jobType.id, label: userData.jobType.name },
-          designation: { value: userData.designation.id, label: userData.designation.name },
+          designation: {
+            value: userData.designation.id,
+            label: userData.designation.name,
+          },
           role: { value: userData.role.id, label: userData.role.name },
         });
       } catch (error) {
@@ -72,11 +77,13 @@ const EditUser = () => {
 
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
-        setJobTypeOptions(response.data.jobTypes.map(type => ({
-          label: type.name,
-          value: type.id,
-        })));
+        const response = await api.get(`/api/jobType/getALLJobTypes`);
+        setJobTypeOptions(
+          response.data.jobTypes.map((type) => ({
+            label: type.name,
+            value: type.id,
+          }))
+        );
       } catch (error) {
         toast.error("Failed to load job types");
         console.error("Job Type Error:", error);
@@ -85,11 +92,13 @@ const EditUser = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
-        setDesignationOptions(response.data.designations.map(designation => ({
-          label: designation.name,
-          value: designation.id,
-        })));
+        const response = await api.get(`/api/designation/getAllDesignation`);
+        setDesignationOptions(
+          response.data.designations.map((designation) => ({
+            label: designation.name,
+            value: designation.id,
+          }))
+        );
       } catch (error) {
         toast.error("Failed to load designations");
         console.error("Designation Error:", error);
@@ -98,12 +107,14 @@ const EditUser = () => {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
-     
-        setRoleOptions(response.data.roles.map(role => ({
-          label: role.name,
-          value: role.id,
-        })));
+        const response = await api.get(`/api/role/getAllRoles`);
+
+        setRoleOptions(
+          response.data.roles.map((role) => ({
+            label: role.name,
+            value: role.id,
+          }))
+        );
       } catch (error) {
         toast.error("Failed to load roles");
         console.error("Role Error:", error);
@@ -127,14 +138,19 @@ const EditUser = () => {
     console.log("Formatted Form Data:", formattedData);
 
     try {
-      const updateduser = await axios.put(`/api/user/updateUserRecord/${id}`,formattedData);
-      console.log(updateduser)
+      const updateduser = await api.put(
+        `/api/user/updateUserRecord/${id}`,
+        formattedData
+      );
+      console.log(updateduser);
       toast.success("User updated successfully");
       navigate("/dashboard/admin/team");
     } catch (error) {
       if (error.response) {
         console.error("Error Response Data:", error.response.data);
-        toast.error(`Server Error: ${error.response.data.message || 'An error occurred'}`);
+        toast.error(
+          `Server Error: ${error.response.data.message || "An error occurred"}`
+        );
       } else if (error.request) {
         console.error("Error Request Data:", error.request);
         toast.error("Network Error: No response received from the server");
@@ -165,9 +181,18 @@ const EditUser = () => {
         </Breadcrumb>
         <div className="flex gap-4">
           <Link to="/dashboard/admin/team">
-            <Button variant="outline" className="hover:bg-yellow-500 rounded-3xl">Cancel</Button>
+            <Button
+              variant="outline"
+              className="hover:bg-yellow-500 rounded-3xl"
+            >
+              Cancel
+            </Button>
           </Link>
-          <Button type="submit" className="bg-[#BA0D09] hover:bg-[#BA0D09] rounded-3xl" onClick={handleSubmit(onSubmit)}>
+          <Button
+            type="submit"
+            className="bg-[#BA0D09] hover:bg-[#BA0D09] rounded-3xl"
+            onClick={handleSubmit(onSubmit)}
+          >
             Submit
           </Button>
         </div>
@@ -175,8 +200,10 @@ const EditUser = () => {
 
       <Card className="mt-4 pb-8 rounded-3xl shadow-sm shadow-green-50">
         <CardHeader>
-          <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono]" >Edit User</CardTitle>
-          <CardDescription  className="text-[#000] text-sm font-[Liberation Mono]">
+          <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono]">
+            Edit User
+          </CardTitle>
+          <CardDescription className="text-[#000] text-sm font-[Liberation Mono]">
             Fill out the form below to edit the user
           </CardDescription>
         </CardHeader>
