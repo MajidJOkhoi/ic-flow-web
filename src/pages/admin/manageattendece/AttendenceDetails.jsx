@@ -24,6 +24,7 @@ import api from "../../../api";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import * as XLSX from "xlsx";
 
 const AttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -74,16 +75,23 @@ const AttendanceDetails = () => {
   }, [selectedDate, id]);
 
   // Download PDF
-  const DownloadReport = () => {
+  const DownloadPDFReport = () => {
     const doc = new jsPDF();
 
     // Add title and user info
     doc.setFontSize(18);
-    doc.text("Attendance Report", 14, 22);
+    doc.text("Monthly Attendance Report", 14, 22);
     doc.setFontSize(12);
-    doc.text(`Name: ${userData.fullName}`, 14, 32);
-    doc.text(`Email: ${userData.email}`, 14, 40);
+    doc.text(`User ID: ${userData._id}`, 14, 30);
+    doc.text(`Name: ${userData.fullName}`, 14, 36);
+    doc.text(`Email: ${userData.email}`, 14, 42);
     doc.text(`Month: ${selectedDate.toLocaleString("default", { month: "long" })}`, 14, 48);
+
+    // Add summary
+    const presentDays = attendanceData.filter((d) => d.checkIn).length;
+    const absentDays = attendanceData.length - presentDays;
+    doc.text(`Total Present: ${presentDays}`, 14, 54);
+    doc.text(`Total Absent: ${absentDays}`, 14, 60);
 
     // Table content for attendance
     const tableData = attendanceData.map((attendance) => [
@@ -91,18 +99,38 @@ const AttendanceDetails = () => {
       attendance.checkIn || "N/A",
       attendance.checkOut || "N/A",
       `${attendance.duration?.hours || 0} hrs ${attendance.duration?.minutes || 0} mins`,
+      attendance.checkIn ? "Present" : "Absent",
     ]);
 
     // Add table with attendance data
     doc.autoTable({
-      head: [["Date", "Check-in", "Check-out", "Duration"]],
+      head: [["Date", "Check-in", "Check-out", "Duration", "Status"]],
       body: tableData,
-      startY: 60,
+      startY: 70,
       theme: "striped",
     });
 
     // Download the PDF
     doc.save(`${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.pdf`);
+  };
+
+  // Download Excel
+  const DownloadExcelReport = () => {
+    const ws = XLSX.utils.json_to_sheet(
+      attendanceData.map((attendance) => ({
+        Date: attendance.date,
+        "Check-in": attendance.checkIn || "N/A",
+        "Check-out": attendance.checkOut || "N/A",
+        Duration: `${attendance.duration?.hours || 0} hrs ${attendance.duration?.minutes || 0} mins`,
+        Status: attendance.checkIn ? "Present" : "Absent",
+      }))
+    );
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
+
+    // Download the Excel
+    XLSX.writeFile(wb, `${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.xlsx`);
   };
 
   return (
@@ -190,19 +218,19 @@ const AttendanceDetails = () => {
 
                     <TableCell className="py-2 px-4">
                       <button
-                        onClick={() => handleEditAttendance(id)}
-                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
-                      >
-                        <CiEdit size={20} className="text-blue-600 mr-2" />
-                        edit
-                      </button>
-
-                      <button
-                        onClick={DownloadReport}
+                        onClick={DownloadPDFReport}
                         className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
                       >
                         <Download size={20} className="text-blue-600 mr-2" />
-                        download
+                        PDF
+                      </button>
+
+                      <button
+                        onClick={DownloadExcelReport}
+                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-green-500  text-green-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+                      >
+                        <Download size={20} className="text-green-600 mr-2" />
+                        Excel
                       </button>
                     </TableCell>
                   </TableRow>
