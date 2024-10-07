@@ -18,9 +18,12 @@ import {
 } from "@/components/ui/table";
 
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import api from '../../../api'
+
+
+
 
 const jobTypeMap = {
   1: "Full Time",
@@ -63,7 +66,7 @@ const ViewTodayTeamAttendance = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getMyTeamMemberAttendanceStatus`
         );
 
@@ -85,7 +88,7 @@ const ViewTodayTeamAttendance = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayAbsentUsers`
         );
         setAbsent(response.data.count);
@@ -97,7 +100,7 @@ const ViewTodayTeamAttendance = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayPresentUsers`
         );
 

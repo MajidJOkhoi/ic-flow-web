@@ -10,11 +10,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import api from "api";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Breadcrumb, BreadcrumbItem , BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
+import api from '../../../api'
 
 
 const AbsentTeamMember = () => {
@@ -29,7 +30,7 @@ const AbsentTeamMember = () => {
     const fetchAbsentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/attendance/getAllTodayAbsentUsers?page=${currentPage}&size=${pageSize}`);
+        const response = await api.get(`/api/attendance/getAllTodayAbsentUsers?page=${currentPage}&size=${pageSize}`);
        
         if (response.data && response.data.absentUsers) {
           setAbsentUsers(response.data.absentUsers);

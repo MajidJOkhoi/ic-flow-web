@@ -19,9 +19,8 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../../../auth/AuthContext";
+import api from '../../../api'
 
 const TeamAttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -41,7 +40,7 @@ const TeamAttendanceDetails = () => {
         .toLowerCase();
       const year = date.getFullYear();
      
-      const response = await axios.get(
+      const response = await api.get(
         `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
 
@@ -62,7 +61,7 @@ const TeamAttendanceDetails = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await api.get(`/api/user/getUserById/${id}`);
         setUserData(response.data.user);
       } catch (error) {
         console.log(error);

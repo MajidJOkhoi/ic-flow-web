@@ -272,7 +272,7 @@ const ViewTodayAttendance = () => {
                             deleteAttendance(attendance._id);
                           }}
                         >
-                          <X className="w-4 h-4 text-xl font-bold" />
+                          <X className="w-4 h-4 text-xl font-bold" /> del
                         </button>
                       </TableCell>
                     </TableRow>

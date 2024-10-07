@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -21,6 +20,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
+import api from '../../../api'
 
 
 const PresentTeamMember = () => {
@@ -35,7 +35,7 @@ const PresentTeamMember = () => {
     const fetchPresentUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayPresentUsers?page=${currentPage}&size=${pageSize}`
         );
 

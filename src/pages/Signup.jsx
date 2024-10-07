@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import api from '../api'
 
 const jobTypeOptions = [
   { label: "Full Time", value: "1" },
@@ -55,7 +55,7 @@ const SignUp = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post('/api/signup', data);
+      await api.post('/api/signup', data);
       toast.success('Sign up successful');
       navigate('/login');
     } catch (error) {

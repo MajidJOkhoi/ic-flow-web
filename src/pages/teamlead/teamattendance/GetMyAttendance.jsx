@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,6 +17,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import api from '../../../api'
 
 
 const GetMyAttendance = () => {
@@ -46,7 +46,7 @@ const GetMyAttendance = () => {
 
         const currentMonth = monthNames[today.getMonth()];
 
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getMyMonthAttendance/${currentMonth}`
         );
         setAttendanceData(response.data.monthAttendance);

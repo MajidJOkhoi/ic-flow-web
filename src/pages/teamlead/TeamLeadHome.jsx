@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Eye, Star, Clipboard } from "lucide-react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useAuth } from "../../auth/AuthContext";
+import api from '../../api'
 
 const TeamLeadHome = () => {
   const [projectCount, setProjectCount] = useState(12);
@@ -19,7 +18,7 @@ const TeamLeadHome = () => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/user/getMyAllUsers`);
+        const response = await api.get(`/api/user/getMyAllUsers`);
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
@@ -36,7 +35,7 @@ const TeamLeadHome = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getMyTeamMemberAttendanceStatus`
         );
         if (response.data && response.data.onlineUserAttendanceRecord) {
@@ -57,7 +56,7 @@ const TeamLeadHome = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayAbsentUsers`
         );
         setAbsent(response.data.count);
@@ -69,7 +68,7 @@ const TeamLeadHome = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `/api/attendance/getAllTodayPresentUsers`
         );
         setPresent(response.data.presentUsers.length);

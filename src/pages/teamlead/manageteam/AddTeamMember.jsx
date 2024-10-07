@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "api";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +7,6 @@ import Select from "react-select";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
@@ -20,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import api from '../../../api'
 
 
 const AddTeamMember = () => {
@@ -46,7 +46,7 @@ const AddTeamMember = () => {
   useEffect(() => {
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await api.get(`/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id
@@ -59,7 +59,7 @@ const AddTeamMember = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await api.get(`/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id
@@ -73,7 +73,7 @@ const AddTeamMember = () => {
     
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await api.get(`/api/role/getAllRoles`);
 
         let roles = [];
         const role = response.data.roles;
@@ -111,7 +111,7 @@ const AddTeamMember = () => {
 
 
     try {
-      await axios.post(`/api/user/create`,formattedData);
+      await api.post(`/api/user/create`,formattedData);
       toast.success("User created successfully");
       navigate("/dashboard/teamlead/team");
     } catch (error) {

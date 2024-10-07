@@ -22,7 +22,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "react-toastify";
 import logo from "../../assets/IC-logo-2.png";
-import axios from "axios";
+import api from '../../api'
 
 const TeamLeadDashboard = () => {
   const { logout } = useAuth();
@@ -32,7 +32,7 @@ const TeamLeadDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(`/api/user/logout`);
+      const response = await api.post(`/api/user/logout`);
 
       if (!response.status === 200) {
         throw new Error("Logout failed. Please try again.");

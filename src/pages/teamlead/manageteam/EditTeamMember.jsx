@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -20,7 +19,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../../../auth/AuthContext";
+import api from '../../../api'
+
 
 const EditTeamMember = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const EditTeamMember = () => {
   useEffect(() => {
     const getCurrentUser = async () => {
       try {
-        const response = await axios.get(`/api/user/getUserById/${id}`);
+        const response = await api.get(`/api/user/getUserById/${id}`);
       
         const userData = response.data?.user;
         
@@ -73,7 +73,7 @@ const EditTeamMember = () => {
 
     const fetchJobTypes = async () => {
       try {
-        const response = await axios.get(`/api/jobType/getALLJobTypes`);
+        const response = await api.get(`/api/jobType/getALLJobTypes`);
         setJobTypeOptions(response.data.jobTypes.map(type => ({
           label: type.name,
           value: type.id,
@@ -86,7 +86,7 @@ const EditTeamMember = () => {
 
     const fetchDesignations = async () => {
       try {
-        const response = await axios.get(`/api/designation/getAllDesignation`);
+        const response = await api.get(`/api/designation/getAllDesignation`);
         setDesignationOptions(response.data.designations.map(designation => ({
           label: designation.name,
           value: designation.id,
@@ -99,7 +99,7 @@ const EditTeamMember = () => {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`/api/role/getAllRoles`);
+        const response = await api.get(`/api/role/getAllRoles`);
 
         let roles = [];
         const role = response.data.roles;
@@ -137,7 +137,7 @@ const EditTeamMember = () => {
     console.log("Formatted Form Data:", formattedData);
 
     try {
-      const updateduser = await axios.put(`/api/user/updateUserRecord/${id}`,formattedData);
+      const updateduser = await api.put(`/api/user/updateUserRecord/${id}`,formattedData);
       
       toast.success("User updated successfully");
       navigate("/dashboard/teamlead/team");
