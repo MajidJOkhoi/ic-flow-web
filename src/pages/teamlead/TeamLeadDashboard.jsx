@@ -44,7 +44,7 @@ const TeamLeadDashboard = () => {
 
       toast.success("Logout successful");
     } catch (error) {
-      toast.error(`An error occurred: ${error.message}`);
+      toast.success(" Logout Succefull");
     }
   };
 
