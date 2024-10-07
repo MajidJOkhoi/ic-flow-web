@@ -13,7 +13,7 @@ const Login = () => {
   const { login } = useAuth();
 
 
-  
+  console.log('wellcome to login')
 
 
   const handleLogin = async (e) => {
