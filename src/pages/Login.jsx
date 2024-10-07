@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import api from '../api'
 
 const Login = () => {
   const emailRef = useRef(null);
@@ -11,10 +12,9 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
-  const apiUrl = import.meta.env.VITE_API_URL
+
 
   
-
 
 
   const handleLogin = async (e) => {
@@ -30,7 +30,7 @@ const Login = () => {
       return toast.warning("Please enter a valid email.");
 
     try {
-      const response = await axios.post(`${apiUrl}/api/user/login`, { email, password });
+      const response = await api.post(`/api/user/login`, { email, password });
 
       if (response.status === 200) {
         const data = response.data;
