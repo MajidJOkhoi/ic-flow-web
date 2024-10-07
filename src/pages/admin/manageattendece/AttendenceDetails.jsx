@@ -133,6 +133,12 @@ const AttendanceDetails = () => {
     XLSX.writeFile(wb, `${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.xlsx`);
   };
 
+
+  const handleEditAttendance = (id) => {
+    navigate(`/dashboard/admin/edit-attendance/${id}`);
+  };
+
+  
   return (
     <>
       <Breadcrumb>
@@ -223,6 +229,14 @@ const AttendanceDetails = () => {
                       >
                         <Download size={20} className="text-blue-600 mr-2" />
                         PDF
+                      </button>
+
+                      <button
+                        onClick={() => handleEditAttendance(id)}
+                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+                      >
+                        <CiEdit size={20} className="text-blue-600 mr-2" />
+                        edit
                       </button>
 
                       <button
