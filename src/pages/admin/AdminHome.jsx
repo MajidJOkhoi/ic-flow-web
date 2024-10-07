@@ -64,7 +64,7 @@ const AdminHome = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get("/api/attendance/getAllTodayPresentUsers");
+        const response = await axios.get("/api/attendance/getAllTodayPresentUsers",{withCredentials:true});
         setPresent(response.data.presentUsers.length);
       } catch (err) {
         setError("An error occurred while fetching present users data.");
