@@ -20,7 +20,7 @@ const AdminHome = () => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/api/user/getMyAllUsers`,{withCredentials:true});
+        const response = await api.get(`/api/user/getMyAllUsers`);
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
@@ -37,7 +37,7 @@ const AdminHome = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/api/attendance/getMyTeamMemberAttendanceStatus`,{withCredentials:true});
+        const response = await api.get(`/api/attendance/getMyTeamMemberAttendanceStatus`);
         if (response.data && response.data.onlineUserAttendanceRecord) {
           setTotalOnlineUser(response.data.onlineUserAttendanceRecord.length);
           setTotalUser(response.data.totalUser);
@@ -54,7 +54,7 @@ const AdminHome = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await api.get(`/api/attendance/getAllTodayAbsentUsers`,{withCredentials:true});
+        const response = await api.get(`/api/attendance/getAllTodayAbsentUsers`);
         setAbsent(response.data.count);
       } catch (err) {
         setError("An error occurred while fetching absent users data.");
@@ -64,7 +64,7 @@ const AdminHome = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await api.get(`/api/attendance/getAllTodayPresentUsers`,{withCredentials:true});
+        const response = await api.get(`/api/attendance/getAllTodayPresentUsers`);
         setPresent(response.data.presentUsers.length);
       } catch (err) {
         setError("An error occurred while fetching present users data.");
