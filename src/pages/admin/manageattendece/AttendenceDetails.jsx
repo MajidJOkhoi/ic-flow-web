@@ -115,7 +115,8 @@ const AttendanceDetails = () => {
   };
 
   // Download Excel
-  const DownloadExcelReport = () => {
+  const DownloadExcelReport = async () => {
+    const XLSX = await import('xlsx');
     const ws = XLSX.utils.json_to_sheet(
       attendanceData.map((attendance) => ({
         Date: attendance.date,
@@ -125,20 +126,19 @@ const AttendanceDetails = () => {
         Status: attendance.checkIn ? "Present" : "Absent",
       }))
     );
-
+  
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
-
-    // Download the Excel
+  
     XLSX.writeFile(wb, `${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.xlsx`);
   };
-
+  
 
   const handleEditAttendance = (id) => {
     navigate(`/dashboard/admin/edit-attendance/${id}`);
   };
 
-  
+
   return (
     <>
       <Breadcrumb>
