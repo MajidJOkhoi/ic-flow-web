@@ -3,8 +3,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Eye, Clipboard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
-
+import api from "../../api";
 
 const AdminHome = () => {
   const [projectCount, setProjectCount] = useState(12);
@@ -15,13 +14,13 @@ const AdminHome = () => {
   const [totalUser, setTotalUser] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const apiUrl = import.meta.env.VITE_API_URL
+
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/user/getMyAllUsers`,{withCredentials:true});
+        const response = await api.get(`/api/user/getMyAllUsers`,{withCredentials:true});
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
@@ -38,7 +37,7 @@ const AdminHome = () => {
     const fetchUserAttendance = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiUrl}/api/attendance/getMyTeamMemberAttendanceStatus`,{withCredentials:true});
+        const response = await api.get(`/api/attendance/getMyTeamMemberAttendanceStatus`,{withCredentials:true});
         if (response.data && response.data.onlineUserAttendanceRecord) {
           setTotalOnlineUser(response.data.onlineUserAttendanceRecord.length);
           setTotalUser(response.data.totalUser);
@@ -55,7 +54,7 @@ const AdminHome = () => {
 
     const fetchAbsentUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayAbsentUsers`,{withCredentials:true});
+        const response = await api.get(`/api/attendance/getAllTodayAbsentUsers`,{withCredentials:true});
         setAbsent(response.data.count);
       } catch (err) {
         setError("An error occurred while fetching absent users data.");
@@ -65,7 +64,7 @@ const AdminHome = () => {
 
     const fetchPresentUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/attendance/getAllTodayPresentUsers`,{withCredentials:true});
+        const response = await api.get(`/api/attendance/getAllTodayPresentUsers`,{withCredentials:true});
         setPresent(response.data.presentUsers.length);
       } catch (err) {
         setError("An error occurred while fetching present users data.");
