@@ -10,8 +10,10 @@ export default defineConfig({
       "/api":"https://flow-backend-ic-production.up.railway.app"
     },
   },
-  rollupOptions: {
-    external: ['xlsx'], 
+  build: {
+    rollupOptions: {
+      external: ['xlsx'], 
+    },
   },
   resolve: {
     alias: {
