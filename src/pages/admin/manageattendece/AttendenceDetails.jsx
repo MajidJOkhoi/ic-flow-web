@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
@@ -19,21 +18,20 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
-import { useParams , Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
-import api from '../../../api'
-
+import api from "../../../api";
+import { Download } from "lucide-react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const AttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   let { id } = useParams();
-
-
 
   const fetchAttendanceData = async (date) => {
     setLoading(true);
@@ -47,8 +45,6 @@ const AttendanceDetails = () => {
       const response = await api.get(
         `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
-
-    
 
       if (response.data.success && response.data.monthAttendance.length > 0) {
         setAttendanceData(response.data.monthAttendance);
@@ -77,14 +73,37 @@ const AttendanceDetails = () => {
     fetchUserInfo();
   }, [selectedDate, id]);
 
+  // Download PDF
+  const DownloadReport = () => {
+    const doc = new jsPDF();
 
-  // Edit User Attendace 
+    // Add title and user info
+    doc.setFontSize(18);
+    doc.text("Attendance Report", 14, 22);
+    doc.setFontSize(12);
+    doc.text(`Name: ${userData.fullName}`, 14, 32);
+    doc.text(`Email: ${userData.email}`, 14, 40);
+    doc.text(`Month: ${selectedDate.toLocaleString("default", { month: "long" })}`, 14, 48);
 
-  const handleEditAttendance = (id) => {
-    navigate(`/dashboard/admin/edit-attendance/${id}`)
+    // Table content for attendance
+    const tableData = attendanceData.map((attendance) => [
+      attendance.date,
+      attendance.checkIn || "N/A",
+      attendance.checkOut || "N/A",
+      `${attendance.duration?.hours || 0} hrs ${attendance.duration?.minutes || 0} mins`,
+    ]);
+
+    // Add table with attendance data
+    doc.autoTable({
+      head: [["Date", "Check-in", "Check-out", "Duration"]],
+      body: tableData,
+      startY: 60,
+      theme: "striped",
+    });
+
+    // Download the PDF
+    doc.save(`${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.pdf`);
   };
-  
-
 
   return (
     <>
@@ -95,7 +114,7 @@ const AttendanceDetails = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <Link href="/dashboard/admin/attendance">Attendance</Link>
+            <Link to="/dashboard/admin/attendance">Attendance</Link>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -170,18 +189,22 @@ const AttendanceDetails = () => {
                     </TableCell>
 
                     <TableCell className="py-2 px-4">
+                      <button
+                        onClick={() => handleEditAttendance(id)}
+                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+                      >
+                        <CiEdit size={20} className="text-blue-600 mr-2" />
+                        edit
+                      </button>
 
-                    <button  onClick={() => handleEditAttendance(id)} className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out">
-
-                    <CiEdit size={20}  className="text-blue-600 mr-2"/>
-                  
-                    edit 
-                    </button>
-                    
-
-                   
+                      <button
+                        onClick={DownloadReport}
+                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+                      >
+                        <Download size={20} className="text-blue-600 mr-2" />
+                        download
+                      </button>
                     </TableCell>
-
                   </TableRow>
                 ))}
               </TableBody>
