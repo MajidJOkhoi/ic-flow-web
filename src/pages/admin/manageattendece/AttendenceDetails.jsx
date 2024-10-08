@@ -18,7 +18,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
 import api from "../../../api";
 import { Download } from "lucide-react";
@@ -31,7 +31,7 @@ const AttendanceDetails = () => {
   const [userData, setUserData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   let { id } = useParams();
 
   const fetchAttendanceData = async (date) => {
@@ -78,66 +78,146 @@ const AttendanceDetails = () => {
   const DownloadPDFReport = () => {
     const doc = new jsPDF();
 
-    // Add title and user info
-    doc.setFontSize(18);
-    doc.text("Monthly Attendance Report", 14, 22);
-    doc.setFontSize(12);
-    doc.text(`User ID: ${userData._id}`, 14, 30);
+    
+    doc.setFontSize(25);
+    doc.setTextColor("#a32d2f");
+    doc.text("Monthly Attendance Report", 14, 20);
+
+    doc.setFontSize(14);
+    doc.setTextColor("#333333");
     doc.text(`Name: ${userData.fullName}`, 14, 36);
     doc.text(`Email: ${userData.email}`, 14, 42);
-    doc.text(`Month: ${selectedDate.toLocaleString("default", { month: "long" })}`, 14, 48);
+    doc.text(
+      `Month: ${selectedDate.toLocaleString("default", {
+        month: "long",
+      })} ${selectedDate.getFullYear()}`,
+      14,
+      48
+    );
 
-    // Add summary
-    const presentDays = attendanceData.filter((d) => d.checkIn).length;
+    // Calculate summary information
+    const presentDays = attendanceData.filter(
+      (d) => d.checkIn && d.checkOut
+    ).length;
     const absentDays = attendanceData.length - presentDays;
-    doc.text(`Total Present: ${presentDays}`, 14, 54);
-    doc.text(`Total Absent: ${absentDays}`, 14, 60);
 
-    // Table content for attendance
+    // Add summary information in a separate table
+    doc.autoTable({
+      startY: 54,
+      head: [["Summary", "Count"]],
+      body: [
+        ["Total Present Days", presentDays],
+        ["Total Absent Days", absentDays],
+      ],
+      theme: "grid",
+      headStyles: { fillColor: "#007bff" },
+      bodyStyles: { fillColor: "#f5f5f5" },
+    });
+
+    // Prepare table data for attendance
     const tableData = attendanceData.map((attendance) => [
       attendance.date,
       attendance.checkIn || "N/A",
       attendance.checkOut || "N/A",
-      `${attendance.duration?.hours || 0} hrs ${attendance.duration?.minutes || 0} mins`,
-      attendance.checkIn ? "Present" : "Absent",
+      `${attendance.duration?.hours || 0} hrs ${
+        attendance.duration?.minutes || 0
+      } mins`,
+      attendance.checkIn && attendance.checkOut ? "Present" : "Absent",
     ]);
 
-    // Add table with attendance data
+    // Add attendance data table
     doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 10, // Start after summary table
       head: [["Date", "Check-in", "Check-out", "Duration", "Status"]],
       body: tableData,
-      startY: 70,
       theme: "striped",
+      headStyles: { fillColor: "#007bff" },
+      bodyStyles: {
+        textColor: (data) =>
+          data.row.raw[4] === "Present" ? "#28a745" : "#dc3545",
+      },
     });
 
-    // Download the PDF
-    doc.save(`${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.pdf`);
+    // Save the PDF file
+    doc.save(
+      `${userData.fullName}-Attendance-${
+        selectedDate.getMonth() + 1
+      }-${selectedDate.getFullYear()}.pdf`
+    );
   };
 
-  // Download Excel
+  // Excel Report Generation
   const DownloadExcelReport = async () => {
-    const XLSX = await import('xlsx');
-    const ws = XLSX.utils.json_to_sheet(
-      attendanceData.map((attendance) => ({
-        Date: attendance.date,
-        "Check-in": attendance.checkIn || "N/A",
-        "Check-out": attendance.checkOut || "N/A",
-        Duration: `${attendance.duration?.hours || 0} hrs ${attendance.duration?.minutes || 0} mins`,
-        Status: attendance.checkIn ? "Present" : "Absent",
-      }))
-    );
-  
+   
     const wb = XLSX.utils.book_new();
+    const sheetData = [
+      ["Monthly Attendance Report"], 
+      [`User ID: ${userData._id}`], 
+      [`Name: ${userData.fullName}`], 
+      [`Email: ${userData.email}`],
+      [
+        `Month: ${selectedDate.toLocaleString("default", {
+          month: "long",
+        })} ${selectedDate.getFullYear()}`,
+      ], 
+      [],
+      ["Summary", "Count"], 
+      [
+        "Total Present Days",
+        attendanceData.filter((d) => d.checkIn && d.checkOut).length,
+      ],
+      [
+        "Total Absent Days",
+        attendanceData.length -
+          attendanceData.filter((d) => d.checkIn && d.checkOut).length,
+      ],
+      [],
+      ["Date", "Check-in", "Check-out", "Duration", "Status"], 
+      ...attendanceData.map((attendance) => [
+        attendance.date,
+        attendance.checkIn || "N/A",
+        attendance.checkOut || "N/A",
+        `${attendance.duration?.hours || 0} hrs ${
+          attendance.duration?.minutes || 0
+        } mins`,
+        attendance.checkIn && attendance.checkOut ? "Present" : "Absent",
+      ]),
+    ];
+
+    
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    const header = ["Summary", "Attendance"];
+    const headingStyle = {
+      font: { bold: true },
+      fill: { fgColor: { rgb: "D9EAD3" } },
+    };
+
+    
+    ws["!cols"] = Array(5).fill({ wch: 15 }); 
+    ws["A1"].s = { font: { bold: true, sz: 14, color: { rgb: "007bff" } } };
+
+    attendanceData.forEach((attendance, index) => {
+      const statusCell = `E${12 + index}`; 
+      if (ws[statusCell].v === "Present") {
+        ws[statusCell].s = { font: { color: { rgb: "28a745" } } }; 
+      } else {
+        ws[statusCell].s = { font: { color: { rgb: "dc3545" } } }; 
+      }
+    });
+
+   
     XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
-  
-    XLSX.writeFile(wb, `${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.xlsx`);
+    XLSX.writeFile(
+      wb,
+      `${userData.fullName}-Attendance-${
+        selectedDate.getMonth() + 1
+      }-${selectedDate.getFullYear()}.xlsx`
+    );
   };
-  
 
   const handleEditAttendance = (id) => {
     navigate(`/dashboard/admin/edit-attendance/${id}`);
   };
-
 
   return (
     <>
@@ -150,50 +230,69 @@ const AttendanceDetails = () => {
           <BreadcrumbItem>
             <Link to="/dashboard/admin/attendance">Attendance</Link>
           </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>Attendance Details</BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
-        <CardHeader className="flex justify-between items-center">
-          <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono]">
+      <Card className="mt-6 w-full rounded-lg shadow-sm max-w-6xl mx-auto">
+        <CardHeader className="flex justify-between items-center mt-8 p-4">
+          <CardTitle className="text-[#0067B8]  font-bold">
             Attendance Details
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6 ">
-          <h2 className="text-[#0067B8] text-2xl font-sm font-bold mb-3 font-[Liberation Mono]">
-            User Information
-          </h2>
-          <h2 className="text-gray-700 font-bold mb-2">
-            <span className="text-[#A32D2F] font-bold"> Name : </span>
-            {userData.fullName}
-          </h2>
-          <h2 className=" text-gray-700 font-bold mb-4">
-            <span className="text-[#A32D2F] font-bold"> Email : </span>{" "}
-            {userData.email}
-          </h2>
+        <CardContent className="p-6">
+          <div className="mb-6 p-4 rounded-lg bg-blue-50">
+            <h2 className="text-lg font-semibold text-blue-600 mb-2">
+              User Information
+            </h2>
+            <p className="text-gray-700">
+              <span className="font-bold text-blue-600">Name:</span>{" "}
+              {userData.fullName}
+            </p>
+            <p className="text-gray-700">
+              <span className="font-bold text-blue-600">Email:</span>{" "}
+              {userData.email}
+            </p>
+          </div>
 
-          <div className="flex justify-between items-center mb-6">
-            <div></div>
-            <div className="flex">
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                dateFormat="MM/yyyy"
-                showMonthYearPicker
-                className="p-2 border rounded-3xl text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+          <div className="flex justify-end mb-4 space-x-4">
+            <button
+              onClick={DownloadExcelReport}
+              className="flex items-center justify-center px-4 py-2 rounded-lg font-bold border border-green-500 text-green-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+            >
+              <Download size={20} className="text-green-600 mr-2" />
+              Attedance Report Excel
+            </button>
+
+            <button
+              onClick={DownloadPDFReport}
+              className="flex items-center justify-center px-4 py-2 rounded-lg font-bold border border-blue-500 text-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+            >
+              <Download size={20} className="text-blue-600 mr-2" />
+              Attedance Report PDF
+            </button>
+          </div>
+
+          <div className="flex justify-end items-center mb-6">
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              dateFormat="MM/yyyy"
+              showMonthYearPicker
+              className="p-2 border rounded-3xl text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
 
           {loading ? (
             <div className="text-center text-blue-500">Loading...</div>
           ) : attendanceData.length === 0 ? (
             <div className="text-center text-red-500">
-              No Record Available for the selected month...
+              No Record Available for the selected month.
             </div>
           ) : (
-            <Table className="w-full text-left text-gray-800 rounded-3xl">
-              <TableHeader className="bg-gray-100 ">
+            <Table className="w-full text-left text-gray-800 rounded-lg overflow-hidden shadow-sm">
+              <TableHeader className="bg-gray-200">
                 <TableRow>
                   <TableHead className="py-2 px-4">Date</TableHead>
                   <TableHead className="py-2 px-4">Check-in</TableHead>
@@ -224,27 +323,11 @@ const AttendanceDetails = () => {
 
                     <TableCell className="py-2 px-4">
                       <button
-                        onClick={DownloadPDFReport}
-                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
-                      >
-                        <Download size={20} className="text-blue-600 mr-2" />
-                        PDF
-                      </button>
-
-                      <button
-                        onClick={() => handleEditAttendance(id)}
-                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-blue-500  text-blue-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+                        onClick={() => handleEditAttendance(attendance._id)}
+                        className="flex items-center justify-center p-2 rounded-lg font-bold border border-blue-500 text-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
                       >
                         <CiEdit size={20} className="text-blue-600 mr-2" />
-                        edit
-                      </button>
-
-                      <button
-                        onClick={DownloadExcelReport}
-                        className="flex items-center justify-center p-2 m-2 rounded-md font-bold border border-green-500  text-green-500  focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
-                      >
-                        <Download size={20} className="text-green-600 mr-2" />
-                        Excel
+                        Edit
                       </button>
                     </TableCell>
                   </TableRow>
@@ -259,3 +342,4 @@ const AttendanceDetails = () => {
 };
 
 export default AttendanceDetails;
+

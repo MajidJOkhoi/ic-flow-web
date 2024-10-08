@@ -297,10 +297,13 @@
 
 
 import React from 'react'
+import ComingSoon from '@/pages/CommingSoon'
 
 const ManageLeave = () => {
   return (
-    <div>ManageLeave</div>
+
+    <ComingSoon />
+   
   )
 }
 
