@@ -57,7 +57,7 @@ const Login = () => {
         style={{ width: "400px" }}
       >
         <div className="w-full  p-8 rounded-lg">
-          <h2 className="text-3xl font-bold text-center mb-4">Login</h2>
+          <h2 className="text-3xl font-bold text-center mb-4">Login Form</h2>
           <p className="text-center text-sm text-gray-600 mb-6">
             Enter your details to log in to your account.
           </p>
