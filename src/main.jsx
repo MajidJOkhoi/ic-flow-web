@@ -51,11 +51,14 @@ import AbsentTeamMember from "./pages/teamlead/teamattendance/AbsentTeamMember";
 import ViewTodayTeamAttendance from "./pages/teamlead/teamattendance/ViewTodayTeamAttendane";
 import PresentTeamMember from "./pages/teamlead/teamattendance/PresentTeamMember";
 import GetMyAttendance from "./pages/teamlead/teamattendance/GetMyAttendance";
+import EditTeamAttendance from "./pages/teamlead/manageteam/EditTeamAttendance";
+
 
 // Authentication Routes ....
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import Unauthorized from "./pages/Unauthorized";
+
 
 const router = createBrowserRouter([
   {
@@ -108,6 +111,7 @@ const router = createBrowserRouter([
             path: "viewtodayteamattendence",
             element: <ViewTodayTeamAttendance />,
           },
+          { path: "edit-team-attendance/:id", element: <EditTeamAttendance /> },
           { path: "absentmembers", element: <AbsentTeamMember /> },
           { path: "presentmembers", element: <PresentTeamMember /> },
           { path: "gettodayattendance", element: <GetMyAttendance /> },
