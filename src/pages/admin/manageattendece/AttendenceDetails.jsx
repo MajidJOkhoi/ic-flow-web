@@ -24,7 +24,7 @@ import api from "../../../api";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
+
 
 const AttendanceDetails = () => {
   const [attendanceData, setAttendanceData] = useState([]);
@@ -148,74 +148,7 @@ const AttendanceDetails = () => {
     );
   };
 
-  // Excel Report Generation
-  const DownloadExcelReport = async () => {
-   
-    const wb = XLSX.utils.book_new();
-    const sheetData = [
-      ["Monthly Attendance Report"], 
-      [`User ID: ${userData._id}`], 
-      [`Name: ${userData.fullName}`], 
-      [`Email: ${userData.email}`],
-      [
-        `Month: ${selectedDate.toLocaleString("default", {
-          month: "long",
-        })} ${selectedDate.getFullYear()}`,
-      ], 
-      [],
-      ["Summary", "Count"], 
-      [
-        "Total Present Days",
-        attendanceData.filter((d) => d.checkIn && d.checkOut).length,
-      ],
-      [
-        "Total Absent Days",
-        attendanceData.length -
-          attendanceData.filter((d) => d.checkIn && d.checkOut).length,
-      ],
-      [],
-      ["Date", "Check-in", "Check-out", "Duration", "Status"], 
-      ...attendanceData.map((attendance) => [
-        attendance.date,
-        attendance.checkIn || "N/A",
-        attendance.checkOut || "N/A",
-        `${attendance.duration?.hours || 0} hrs ${
-          attendance.duration?.minutes || 0
-        } mins`,
-        attendance.checkIn && attendance.checkOut ? "Present" : "Absent",
-      ]),
-    ];
-
-    
-    const ws = XLSX.utils.aoa_to_sheet(sheetData);
-    const header = ["Summary", "Attendance"];
-    const headingStyle = {
-      font: { bold: true },
-      fill: { fgColor: { rgb: "D9EAD3" } },
-    };
-
-    
-    ws["!cols"] = Array(5).fill({ wch: 15 }); 
-    ws["A1"].s = { font: { bold: true, sz: 14, color: { rgb: "007bff" } } };
-
-    attendanceData.forEach((attendance, index) => {
-      const statusCell = `E${12 + index}`; 
-      if (ws[statusCell].v === "Present") {
-        ws[statusCell].s = { font: { color: { rgb: "28a745" } } }; 
-      } else {
-        ws[statusCell].s = { font: { color: { rgb: "dc3545" } } }; 
-      }
-    });
-
-   
-    XLSX.utils.book_append_sheet(wb, ws, "Attendance Report");
-    XLSX.writeFile(
-      wb,
-      `${userData.fullName}-Attendance-${
-        selectedDate.getMonth() + 1
-      }-${selectedDate.getFullYear()}.xlsx`
-    );
-  };
+  
 
   const handleEditAttendance = (id) => {
     navigate(`/dashboard/admin/edit-attendance/${id}`);
@@ -259,13 +192,8 @@ const AttendanceDetails = () => {
           </div>
 
           <div className="flex justify-end mb-4 space-x-4">
-            <button
-              onClick={DownloadExcelReport}
-              className="flex items-center justify-center px-4 py-2 rounded-lg font-bold border border-green-500 text-green-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
-            >
-              <Download size={20} className="text-green-600 mr-2" />
-              Attedance Report Excel
-            </button>
+            
+            <div></div>
 
             <button
               onClick={DownloadPDFReport}
