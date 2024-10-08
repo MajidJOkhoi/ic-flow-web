@@ -26,7 +26,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "react-toastify";
 import logo from "../../assets/IC-logo-2.png";
 import { useAuth } from "../../auth/AuthContext";
-import api from '../../api'
+import api from "../../api";
 
 const AdminDashboard = () => {
   const { logout } = useAuth();
@@ -34,26 +34,20 @@ const AdminDashboard = () => {
   const { userRole } = useAuth();
   const { username } = useAuth();
 
-
-
   const handleLogout = async () => {
     try {
-      
       const response = await api.post(`/api/user/logout`);
 
       if (!response.status === 200) {
         throw new Error("Logout failed. Please try again.");
       }
-      
+
       navigate("/");
-      
+
       logout();
-      
       toast.success("Logout successful");
-
-
     } catch (error) {
-      toast.error(`An error occurred: ${error.message}`);
+      toast.success("Logout successful");
     }
   };
 
@@ -95,7 +89,6 @@ const AdminDashboard = () => {
                 <CalendarCheck className="h-6 w-6 text-[#BA0D09]" />
                 Manage Attendance
               </Link>
-
 
               <Link
                 to="/dashboard/admin/leaves"
