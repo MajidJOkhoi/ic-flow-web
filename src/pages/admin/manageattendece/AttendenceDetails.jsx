@@ -47,6 +47,8 @@ const AttendanceDetails = () => {
         `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
 
+      console.log(response.data.monthAttendance)
+
       if (response.data.success && response.data.monthAttendance.length > 0) {
         setAttendanceData(response.data.monthAttendance);
       } else {
