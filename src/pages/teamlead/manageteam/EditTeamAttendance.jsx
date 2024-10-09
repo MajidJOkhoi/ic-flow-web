@@ -94,11 +94,11 @@ const EditTeamAttendance = () => {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <Link to="/dashboard/admin">Home</Link>
+            <Link to="/dashboard/teamlead">Home</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <Link to="/dashboard/admin/attendance">Attendance</Link>
+            <Link to="/dashboard/teamlead/attendance">Attendance</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
