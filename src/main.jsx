@@ -35,6 +35,12 @@ import ManageLeave from "./pages/admin/manageleave/ManageLeave";
 import TimeOffDetails from "./pages/admin/manageleave/TimeOffDetails";
 import CheckPerformance from "./pages/admin/manageperformance/CheckPerformance";
 
+// edit admin profile
+
+import EditMyProfile from "./pages/admin/manageuser/EditMyProfile";
+
+
+
 // Team Lead Routes
 import TeamLeadDashboard from "./pages/teamlead/TeamLeadDashboard";
 import TeamLeadHome from "./pages/teamlead/TeamLeadHome";
@@ -52,6 +58,12 @@ import ViewTodayTeamAttendance from "./pages/teamlead/teamattendance/ViewTodayTe
 import PresentTeamMember from "./pages/teamlead/teamattendance/PresentTeamMember";
 import GetMyAttendance from "./pages/teamlead/teamattendance/GetMyAttendance";
 import EditTeamAttendance from "./pages/teamlead/manageteam/EditTeamAttendance";
+import MyAllUser from "./pages/teamlead/teamattendance/MyAllUser";
+import AddTeamAttendance from "./pages/teamlead/teamattendance/AddTeamAttendance";
+
+// edit own Profile 
+import EditProfile from "./pages/teamlead/manageteam/EditProfile";
+
 
 
 // Authentication Routes ....
@@ -71,6 +83,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <AdminHome /> },
           { path: "projects", element: <ManageProject /> },
+          { path: "editmyprofile", element: <EditMyProfile /> },
           { path: "projects/create", element: <CreateProject /> },
           { path: "team", element: <ManageTeam /> },
           { path: "create/createteamlead", element: <AddTeamLead /> },
@@ -97,12 +110,15 @@ const router = createBrowserRouter([
         element: <TeamLeadDashboard />,
         children: [
           { index: true, element: <TeamLeadHome /> },
+          { path: "editprofile", element: <EditProfile /> },
           { path: "projects", element: <ManageProject /> },
           { path: "projects/create", element: <CreateProject /> },
           { path: "team", element: <ManageMyTeam /> },
           { path: "team/createteammember", element: <AddTeamMember /> },
           { path: "team/edit/:id", element: <EditTeamMember /> },
           { path: "attendance", element: <ManageTeamAttendance /> },
+          { path: "myallmember", element: <MyAllUser /> },
+          { path: "addattendance/:id", element: <AddTeamAttendance /> },
           {
             path: "teamattendencedetails/:id",
             element: <TeamAttendanceDetails />,

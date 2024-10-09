@@ -1,5 +1,6 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import {
+  BookmarkPlus,
   BriefcaseBusiness,
   CalendarCheck,
   CircleUser,
@@ -22,7 +23,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "react-toastify";
 import logo from "../../assets/IC-logo-2.png";
-import api from '../../api'
+import api from "../../api";
 
 const TeamLeadDashboard = () => {
   const { logout } = useAuth();
@@ -79,13 +80,13 @@ const TeamLeadDashboard = () => {
                   <User className="h-6 w-6 text-[#BA0D09]" />
                   Manage Team
                 </Link>
-                {/* <Link
-                to="/dashboard/leaves"
-                className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-              >
-                <CalendarOff className="h-6 w-6 text-[#BA0D09]" />
-                Manage Leave
-              </Link> */}
+                <Link
+                  to="/dashboard/teamlead/myallmember"
+                  className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
+                >
+                  <BookmarkPlus className="h-6 w-6 text-[#BA0D09]" />
+                  Add Attedance
+                </Link>
                 <Link
                   to="/dashboard/teamlead/attendance"
                   className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
@@ -227,6 +228,18 @@ const TeamLeadDashboard = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem> Name : {username}</DropdownMenuItem>
                 <DropdownMenuSeparator />
+
+                <Button
+                  variant="link"
+                  className="text-[#BA0D09]"
+                  onClick={() => {
+                    navigate("/dashboard/teamlead/editprofile");
+                  }}
+                >
+                  Edit Profile
+                </Button>
+                <DropdownMenuSeparator />
+
                 <DropdownMenuItem onClick={handleLogout}>
                   <Button variant="link" className="text-[#BA0D09]">
                     Logout

@@ -221,6 +221,19 @@ const AdminDashboard = () => {
               </DropdownMenuItem>
               <DropdownMenuItem> Name : {username}</DropdownMenuItem>
               <DropdownMenuSeparator />
+
+              <Button
+                variant="link"
+                className="text-[#BA0D09]"
+                onClick={() => {
+                  navigate("/dashboard/admin/editmyprofile");
+                }}
+              >
+                Edit Profile
+              </Button>
+              <DropdownMenuSeparator />
+
+
               <DropdownMenuItem onClick={handleLogout}>
                 <Button variant="link" className="text-[#BA0D09]">
                   Logout

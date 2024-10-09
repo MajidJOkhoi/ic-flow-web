@@ -138,7 +138,7 @@ const EditTeamMember = () => {
 
     try {
       const updateduser = await api.put(`/api/user/updateUserRecord/${id}`,formattedData);
-      
+     console.log(updateduser);  
       toast.success("User updated successfully");
       navigate("/dashboard/teamlead/team");
     } catch (error) {

@@ -12,14 +12,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Link, useParams } from "react-router-dom";
 import api from '../../../api';
 
-const EditTeamAttendance = () => {
+const AddTeamAttendance = () => {
   const [attendanceData, setAttendanceData] = useState({
     startTime: "",
     endTime: "",
   });
   
   const { id } = useParams();
-  
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
@@ -99,11 +98,11 @@ const EditTeamAttendance = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <Link to="/dashboard/teamlead/attendance">Attendance</Link>
+            <Link to="/dashboard/teamlead/myallmember">Attendance</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <span>Edit Attendance</span>
+            <span>Add Attendance</span>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -111,7 +110,7 @@ const EditTeamAttendance = () => {
       <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono] text-center">
-            Edit Attendance
+            Add User Attendance
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -169,4 +168,4 @@ const EditTeamAttendance = () => {
   );
 };
 
-export default EditTeamAttendance;
+export default AddTeamAttendance;

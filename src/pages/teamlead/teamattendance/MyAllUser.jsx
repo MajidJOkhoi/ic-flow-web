@@ -40,7 +40,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "react-toastify";
 import api from '../../../api'
 
-const ManageTeamAttendance = () => {
+const MyAllUser = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -233,8 +233,8 @@ const ManageTeamAttendance = () => {
             <div>
               
               <CardDescription
-              className=" text-[#0067B8] text-lg font-bold  font-[Liberation Mono]">
-                To Check Monthly Report Attendance
+              className=" text-[#0067B8] text-lg font-bold  font-[sans-serif]">
+                To Add Monthly Attendance
                 <span className="text-red-500 font-bold"> Click
                 User Record. </span>
               </CardDescription>
@@ -295,7 +295,7 @@ const ManageTeamAttendance = () => {
                     key={request._id}
                     className="cursor-pointer hover:bg-gray-50 rounded-3xl"
                     onClick={() => {
-                      navigate(`/dashboard/teamlead/teamattendencedetails/${request._id}`);
+                      navigate(`/dashboard/teamlead/addattendance/${request._id}`);
                     }}
                   >
                     <TableCell>{request.fullName}</TableCell>
@@ -337,11 +337,11 @@ const ManageTeamAttendance = () => {
                             asChild
                             onClick={() => {
                               navigate(
-                                `/dashboard/admin/attendencedetails/${request._id}`
+                                `/dashboard/teamlead/attendencedetails/${request._id}`
                               );
                             }}
                           >
-                            <Link to="#">View Attendece</Link>
+                            <Link to="/dashboard/teamlead/attendencedetails/${request._id"> Updated Attendance </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             asChild
@@ -391,7 +391,7 @@ const ManageTeamAttendance = () => {
   );
 };
 
-export default ManageTeamAttendance;
+export default MyAllUser;
 
 
 
