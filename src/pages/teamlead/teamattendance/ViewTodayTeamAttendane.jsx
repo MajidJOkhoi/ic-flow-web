@@ -21,6 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import api from '../../../api'
+import { X } from "lucide-react";
 
 
 
@@ -52,6 +53,12 @@ const designationMap = {
   11: "Senior SEO Expert",
   12: "Senior Backend Developer",
   13: "Junior Backend Developer",
+};
+
+
+const deleteAttendance = async (id) => {
+  await api.delete(`/api/attendance/delete/${id}`);
+  toast.success("Attendance deleted successfully");
 };
 
 const ViewTodayTeamAttendance = () => {
@@ -114,7 +121,7 @@ const ViewTodayTeamAttendance = () => {
     fetchAbsentUsers();
     fetchPresentUsers();
     fetchUserAttendance();
-  }, []);
+  }, [deleteAttendance]);
 
   return (
     <>
@@ -181,6 +188,7 @@ const ViewTodayTeamAttendance = () => {
                   <TableHead className="py-2 px-4">Designation</TableHead>
                   <TableHead className="py-2 px-4">Date</TableHead>
                   <TableHead className="py-2 px-4">Check-in Time</TableHead>
+                  <TableHead className="py-2 px-4">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -215,6 +223,18 @@ const ViewTodayTeamAttendance = () => {
                     <TableCell className="py-2 px-4">
                       {attendance.checkIn?.time || "N/A"}
                     </TableCell>
+
+
+                    <TableCell className="py-2 px-4">
+                        <button
+                          className="px-3 py-2 rounded-full  text-red-500 bg-red-300 hover:bg-red-100 transition-colors duration-200 ease-in-out flex items-center justify-center"
+                          onClick={() => {
+                            deleteAttendance(attendance._id);
+                          }}
+                        >
+                          <X className="w-4 h-4 text-xl font-bold" /> del
+                        </button>
+                      </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
