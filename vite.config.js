@@ -8,7 +8,7 @@ export default defineConfig({
   base: './',
   server: {
     proxy: {
-      "/api":"https://flow-backend-ic-production-f251.up.railway.app"
+      "/api":"https://flow-backend-ic-production-932b.up.railway.app"
     },
   },
   resolve: {

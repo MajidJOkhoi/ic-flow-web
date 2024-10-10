@@ -21,8 +21,7 @@ const AdminHome = () => {
       try {
         setLoading(true);
         const response = await api.get(`/api/user/getMyAllUsers`);
-        console.log(response.data.myUsers);
-
+       
         if (response.data && response.data.myUsers) {
           setUserCount(response.data.myUsers.length);
         } else {
