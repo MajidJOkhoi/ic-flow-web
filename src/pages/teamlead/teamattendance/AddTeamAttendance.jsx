@@ -71,7 +71,7 @@ const AddTeamAttendance = () => {
     };
 
     try {
-      const response = await api.post(`/api/attendance/update/${id}`, {
+      const response = await api.post(`/api/attendance/updat/${id}`, {
         date: selectedDate,
         ...updatedData,
       });
