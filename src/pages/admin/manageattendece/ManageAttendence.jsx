@@ -231,14 +231,11 @@ const ManageAttendance = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono]">
-                View List Of All Team Members{" "}
-              </CardTitle>
-              <CardDescription className="text-[#000] text-sm font-[Liberation Mono]">
+              <CardDescription className=" text-[#0067B8] text-lg font-bold  font-[Liberation Mono]">
                 To Check Monthly Report Attendance
                 <span className="text-red-500 font-bold">
                   {" "}
-                  Click User Record.
+                  Click User Record.{" "}
                 </span>
               </CardDescription>
             </div>
