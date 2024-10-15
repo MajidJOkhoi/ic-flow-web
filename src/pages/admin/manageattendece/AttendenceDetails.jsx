@@ -42,18 +42,66 @@ const AttendanceDetails = () => {
         .toLocaleString("default", { month: "long" })
         .toLowerCase();
       const year = date.getFullYear();
-
+  
+      const currentDate = new Date(); // Current date
+      const endOfMonth = new Date(year, date.getMonth() + 1, 0).getDate(); // Last day of the month
+      const lastDate = currentDate.getMonth() === date.getMonth() ? currentDate.getDate() : endOfMonth;
+  
+      // Create an array of all days from 1st to the lastDate
+      const allDaysInMonth = Array.from({ length: lastDate }, (_, index) => new Date(year, date.getMonth(), index + 1));
+  
+      // Get attendance data from API
       const response = await api.get(
         `/api/attendance/getMyMonthAttendanceById?userid=${id}&&month=${month}`
       );
-
-      console.log(response.data.monthAttendance)
-
+  
       if (response.data.success && response.data.monthAttendance.length > 0) {
-        const sortedData = response.data.monthAttendance.sort((a, b) => new Date(a.date) - new Date(b.date));
-        console.log(sortedData);
- 
-        setAttendanceData(response.data.monthAttendance);
+        const attendanceRecords = response.data.monthAttendance;
+  
+        // Remove weekends (Saturday = 6, Sunday = 0)
+        const weekdaysInMonth = allDaysInMonth.filter((day) => {
+          const dayOfWeek = day.getDay();
+          return dayOfWeek !== 0 && dayOfWeek !== 6; // Exclude Sundays (0) and Saturdays (6)
+        });
+  
+        
+        const attendanceMap = {};
+        attendanceRecords.forEach((attendance) => {
+          const attendanceDate = new Date(attendance.date).toDateString();
+          attendanceMap[attendanceDate] = attendance;
+        });
+  
+      
+        const summary = {
+          present: 0,
+          absent: 0,
+          weekends: allDaysInMonth.length - weekdaysInMonth.length,
+        };
+  
+        const updatedAttendanceData = weekdaysInMonth.map((day) => {
+          const dateStr = day.toDateString();
+          const attendance = attendanceMap[dateStr];
+  
+          if (attendance && attendance.checkIn && attendance.checkOut) {
+            summary.present += 1;
+            return {
+              ...attendance,
+              status: "Present",
+            };
+          } else {
+            summary.absent += 1;
+            return {
+              date: dateStr,
+              checkIn: null,
+              checkOut: null,
+              duration: { hours: 0, minutes: 0 },
+              status: "Absent",
+            };
+          }
+        });
+  
+        setAttendanceData(updatedAttendanceData);
+        setSummary(summary);
       } else {
         toast.error("No Record Available for the selected month.");
       }
@@ -63,6 +111,8 @@ const AttendanceDetails = () => {
       setLoading(false);
     }
   };
+  
+  
 
   useEffect(() => {
     fetchAttendanceData(selectedDate);
@@ -79,77 +129,80 @@ const AttendanceDetails = () => {
     fetchUserInfo();
   }, [selectedDate, id]);
 
-  // Download PDF
-  const DownloadPDFReport = () => {
-    const doc = new jsPDF();
+// Download PDF
+const DownloadPDFReport = () => {
+  const doc = new jsPDF();
 
-    
-    doc.setFontSize(25);
-    doc.setTextColor("#a32d2f");
-    doc.text("Monthly Attendance Report", 14, 20);
+ 
+  doc.setFontSize(25);
+  doc.setTextColor("#a32d2f");
+  doc.text("Monthly Attendance Report", 14, 20);
 
-    doc.setFontSize(14);
-    doc.setTextColor("#333333");
-    doc.text(`Name: ${userData.fullName}`, 14, 36);
-    doc.text(`Email: ${userData.email}`, 14, 42);
-    doc.text(
-      `Month: ${selectedDate.toLocaleString("default", {
-        month: "long",
-      })} ${selectedDate.getFullYear()}`,
-      14,
-      48
-    );
+  doc.setFontSize(14);
+  doc.setTextColor("#333333");
+  doc.text(`Name: ${userData.fullName}`, 14, 36);
+  doc.text(`Email: ${userData.email}`, 14, 42);
+  doc.text(
+    `Month: ${selectedDate.toLocaleString("default", {
+      month: "long",
+    })} ${selectedDate.getFullYear()}`,
+    14,
+    48
+  );
 
-    // Calculate summary information
-    const presentDays = attendanceData.filter(
-      (d) => d.checkIn && d.checkOut
-    ).length;
-    const absentDays = attendanceData.length - presentDays;
+  // Calculate present, absent, and weekend days
+  const weekdaysInMonth = Array.from({ length: selectedDate.getDate() }, (_, index) => {
+    const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), index + 1);
+    return date.getDay() !== 0 && date.getDay() !== 6 ? date : null; // Exclude weekends
+  }).filter(Boolean);
 
-    // Add summary information in a separate table
-    doc.autoTable({
-      startY: 54,
-      head: [["Summary", "Count"]],
-      body: [
-        ["Total Present Days", presentDays],
-        ["Total Absent Days", absentDays],
-      ],
-      theme: "grid",
-      headStyles: { fillColor: "#007bff" },
-      bodyStyles: { fillColor: "#f5f5f5" },
-    });
+  const presentDays = attendanceData.filter(
+    (d) => d.checkIn && d.checkOut
+  ).length;
+  const absentDays = weekdaysInMonth.length - presentDays;
 
-    // Prepare table data for attendance
-    const tableData = attendanceData.map((attendance) => [
-      attendance.date,
-      attendance.checkIn || "N/A",
-      attendance.checkOut || "N/A",
-      `${attendance.duration?.hours || 0} hrs ${
-        attendance.duration?.minutes || 0
-      } mins`,
-      attendance.checkIn && attendance.checkOut ? "Present" : "Absent",
-    ]);
+  // Prepare table data for attendance
+  const tableData = attendanceData.map((attendance) => [
+    attendance.date,
+    attendance.checkIn || "N/A",
+    attendance.checkOut || "N/A",
+    `${attendance.duration?.hours || 0} hrs ${attendance.duration?.minutes || 0} mins`,
+    attendance.checkIn && attendance.checkOut ? "Present" : "Absent",
+  ]);
 
-    // Add attendance data table
-    doc.autoTable({
-      startY: doc.lastAutoTable.finalY + 10, // Start after summary table
-      head: [["Date", "Check-in", "Check-out", "Duration", "Status"]],
-      body: tableData,
-      theme: "striped",
-      headStyles: { fillColor: "#007bff" },
-      bodyStyles: {
-        textColor: (data) =>
-          data.row.raw[4] === "Present" ? "#28a745" : "#dc3545",
-      },
-    });
+  // Add attendance data table
+  doc.autoTable({
+    startY: 54, // Start position for attendance table
+    head: [["Date", "Check-in", "Check-out", "Duration", "Status"]],
+    body: tableData,
+    theme: "striped",
+    headStyles: { fillColor: "#007bff" },
+    bodyStyles: {
+      textColor: (data) => (data.row.raw[4] === "Present" ? "#28a745" : "#dc3545"),
+    },
+  });
 
-    // Save the PDF file
-    doc.save(
-      `${userData.fullName}-Attendance-${
-        selectedDate.getMonth() + 1
-      }-${selectedDate.getFullYear()}.pdf`
-    );
-  };
+  // Add summary after attendance table
+  const finalY = doc.lastAutoTable.finalY + 10; // Start summary after the attendance table
+  doc.autoTable({
+    startY: finalY, 
+    head: [["Summary", "Count"]],
+    body: [
+      ["Total Present Days", presentDays],
+      ["Total Absent Days", absentDays],
+    ],
+    theme: "grid",
+    headStyles: { fillColor: "#007bff" },
+    bodyStyles: { fillColor: "#f5f5f5" },
+  });
+
+  // Save the PDF file
+  doc.save(
+    `${userData.fullName}-Attendance-${selectedDate.getMonth() + 1}-${selectedDate.getFullYear()}.pdf`
+  );
+};
+
+
 
   
 
