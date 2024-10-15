@@ -29,6 +29,7 @@ import AbsentUser from "./pages/admin/manageattendece/AbsentUser";
 import PresentUser from "./pages/admin/manageattendece/PresentUser";
 import ViewTodayAttendance from "./pages/admin/manageattendece/ViewTodayAttendance";
 import EditAttendenceForm from "./pages/admin/manageattendece/EditAttendenceForm";
+import AddTeamAttendance from "./pages/admin/manageattendece/AddTeamAttendance";
 
 // Leave and Perfomance Routes
 import ManageLeave from "./pages/admin/manageleave/ManageLeave";
@@ -58,8 +59,7 @@ import ViewTodayTeamAttendance from "./pages/teamlead/teamattendance/ViewTodayTe
 import PresentTeamMember from "./pages/teamlead/teamattendance/PresentTeamMember";
 import GetMyAttendance from "./pages/teamlead/teamattendance/GetMyAttendance";
 import EditTeamAttendance from "./pages/teamlead/manageteam/EditTeamAttendance";
-import MyAllUser from "./pages/teamlead/teamattendance/MyAllUser";
-import AddTeamAttendance from "./pages/teamlead/teamattendance/AddTeamAttendance";
+import AddMyTeamAttendance from "./pages/teamlead/teamattendance/AddMyTeamAttendance";
 
 // edit own Profile 
 import EditProfile from "./pages/teamlead/manageteam/EditProfile";
@@ -95,6 +95,7 @@ const router = createBrowserRouter([
           { path: "viewtodayattendence", element: <ViewTodayAttendance /> },
           { path: "absentusers", element: <AbsentUser /> },
           { path: "edit-attendance/:id", element: <EditAttendenceForm /> },
+          { path: "addattendance/:id", element: <AddTeamAttendance /> },
           { path: "presentusers", element: <PresentUser /> },
           { path: "performance", element: <CheckPerformance /> },
         ],
@@ -117,8 +118,7 @@ const router = createBrowserRouter([
           { path: "team/createteammember", element: <AddTeamMember /> },
           { path: "team/edit/:id", element: <EditTeamMember /> },
           { path: "attendance", element: <ManageTeamAttendance /> },
-          { path: "myallmember", element: <MyAllUser /> },
-          { path: "addattendance/:id", element: <AddTeamAttendance /> },
+          { path: "addattendance/:id", element: <AddMyTeamAttendance  /> },
           {
             path: "teamattendencedetails/:id",
             element: <TeamAttendanceDetails />,

@@ -9,10 +9,10 @@ import {
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from '../../../api';
 
-const EditAttendanceForm = () => {
+const AddTeamAttendance = () => {
   const [attendanceData, setAttendanceData] = useState({
     startTime: "",
     endTime: "",
@@ -21,6 +21,7 @@ const EditAttendanceForm = () => {
   const { id } = useParams();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const convertTo12HourFormat = (time) => {
     let [hours, minutes] = time.split(':');
@@ -57,27 +58,31 @@ const EditAttendanceForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+   
     if (!isEndTimeValid(attendanceData.startTime, attendanceData.endTime)) {
       toast.error("Check-out time must be later than check-in time.");
       return;
     }
-
+  
     setLoading(true);
-
+  
+    
+    const formattedDate = selectedDate.toDateString();
+  
+    
     const updatedData = {
-      startTime: convertTo12HourFormat(attendanceData.startTime),
-      endTime: convertTo12HourFormat(attendanceData.endTime),
+      checkIn: { time: convertTo12HourFormat(attendanceData.startTime) },
+      checkOut: { time: convertTo12HourFormat(attendanceData.endTime) },
+      date: formattedDate,  
     };
-
+  
     try {
-      const response = await api.post(`/api/attendance/update/${id}`, {
-        date: selectedDate,
-        ...updatedData,
-      });
-
+      const response = await api.post(`/api/attendance/markAttendance/${id}`, updatedData);
       if (response.data.success) {
         toast.success("Attendance updated successfully!");
+        navigate('/dashboard/admin/attendencedetails/:id')
+      
       } else {
         toast.error("Failed to update attendance.");
       }
@@ -98,11 +103,11 @@ const EditAttendanceForm = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <Link to={`/dashboard/admin/attendence`}>Attendance</Link>
+            <Link to={`/dashboard/admin/attendencedetails/${id}`}>Attendance</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <span>Edit Attendance</span>
+            <span>Add Attendance</span>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -110,7 +115,7 @@ const EditAttendanceForm = () => {
       <Card className="mt-2 w-full rounded-3xl shadow-sm shadow-green-50 max-w-sm sm:max-w-full">
         <CardHeader>
           <CardTitle className="text-[#0067B8] text-3xl font-[Liberation Mono] text-center">
-            Edit Attendance
+            Add User Attendance
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -158,7 +163,7 @@ const EditAttendanceForm = () => {
                 className="bg-[#BA0D09] hover:bg-[#BA0D09] text-white py-2 px-4 rounded-3xl shadow-lg transition duration-200"
                 disabled={loading}
               >
-                {loading ? "Updating..." : "Update Attendance"}
+                {loading ? "Adding ..." : "Add Attendance"}
               </button>
             </div>
           </form>
@@ -168,4 +173,4 @@ const EditAttendanceForm = () => {
   );
 };
 
-export default EditAttendanceForm;
+export default AddTeamAttendance;

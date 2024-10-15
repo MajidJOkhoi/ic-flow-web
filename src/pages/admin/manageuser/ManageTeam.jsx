@@ -356,10 +356,10 @@ const ManageTeam = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem>
-                            <Link onClick={() => handleEdit(request._id)}>
+                          <DropdownMenuItem  onClick={() => handleEdit(request._id)}>
+                            
                               Edit
-                            </Link>
+                           
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             asChild

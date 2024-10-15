@@ -80,13 +80,7 @@ const TeamLeadDashboard = () => {
                   <User className="h-6 w-6 text-[#BA0D09]" />
                   Manage Team
                 </Link>
-                <Link
-                  to="/dashboard/teamlead/myallmember"
-                  className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"
-                >
-                  <BookmarkPlus className="h-6 w-6 text-[#BA0D09]" />
-                  Add Attedance
-                </Link>
+               
                 <Link
                   to="/dashboard/teamlead/attendance"
                   className="flex items-center font-bold gap-3 rounded-lg px-3 py-4 text-gray-700 transition-all hover:bg-green-100 hover:text-green-700"

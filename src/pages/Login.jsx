@@ -3,15 +3,15 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import api from '../api'
+import api from '../api';
 
 const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
   const { login } = useAuth();
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,10 +22,10 @@ const Login = () => {
     if (!password) return toast.warning("Please enter password");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email))
-      return toast.warning("Please enter a valid email.");
+    if (!emailRegex.test(email)) return toast.warning("Please enter a valid email.");
 
     try {
+      setLoading(true); // Set loading to true to disable the button
       const response = await api.post(`/api/user/login`, { email, password });
 
       if (response.status === 200) {
@@ -47,6 +47,8 @@ const Login = () => {
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -56,14 +58,12 @@ const Login = () => {
         className="bg-white rounded-lg shadow-lg flex overflow-hidden"
         style={{ width: "400px" }}
       >
-        <div className="w-full  p-8 rounded-lg">
+        <div className="w-full p-8 rounded-lg">
           <h2 className="text-3xl font-bold text-center mb-4">Login Form</h2>
           <p className="text-center text-sm text-gray-600 mb-6">
             Enter your details to log in to your account.
           </p>
           <form onSubmit={handleLogin} className="space-y-6">
-            <div className="flex space-x-4"></div>
-
             <div>
               <label
                 htmlFor="email"
@@ -106,9 +106,10 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md shadow-md transition duration-200"
+              className={`w-full ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'} text-white py-2 rounded-md shadow-md transition duration-200`}
+              disabled={loading} 
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
         </div>

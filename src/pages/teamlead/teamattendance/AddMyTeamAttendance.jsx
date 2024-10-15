@@ -9,10 +9,10 @@ import {
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from '../../../api';
 
-const AddTeamAttendance = () => {
+const AddMyTeamAttendance = () => {
   const [attendanceData, setAttendanceData] = useState({
     startTime: "",
     endTime: "",
@@ -21,6 +21,7 @@ const AddTeamAttendance = () => {
   const { id } = useParams();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const convertTo12HourFormat = (time) => {
     let [hours, minutes] = time.split(':');
@@ -57,27 +58,33 @@ const AddTeamAttendance = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+   
     if (!isEndTimeValid(attendanceData.startTime, attendanceData.endTime)) {
       toast.error("Check-out time must be later than check-in time.");
       return;
     }
-
+  
     setLoading(true);
-
+  
+    
+    const formattedDate = selectedDate.toDateString();
+  
+    
     const updatedData = {
-      startTime: convertTo12HourFormat(attendanceData.startTime),
-      endTime: convertTo12HourFormat(attendanceData.endTime),
+      checkIn: { time: convertTo12HourFormat(attendanceData.startTime) },
+      checkOut: { time: convertTo12HourFormat(attendanceData.endTime) },
+      date: formattedDate,  
     };
-
+  
     try {
-      const response = await api.post(`/api/attendance/updat/${id}`, {
-        date: selectedDate,
-        ...updatedData,
-      });
-
+      const response = await api.post(`/api/attendance/markAttendance/${id}`, updatedData);
+      console.log(response.data);
+  
       if (response.data.success) {
         toast.success("Attendance updated successfully!");
+        navigate('/dashboard/teamlead/teamattendencedetails/:id')
+        
       } else {
         toast.error("Failed to update attendance.");
       }
@@ -98,10 +105,11 @@ const AddTeamAttendance = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <Link to="/dashboard/teamlead/myallmember">Attendance</Link>
+            <Link to="/dashboard/teamlead/teamattendencedetails/:id">Attendance</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
+          
             <span>Add Attendance</span>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -158,7 +166,7 @@ const AddTeamAttendance = () => {
                 className="bg-[#BA0D09] hover:bg-[#BA0D09] text-white py-2 px-4 rounded-3xl shadow-lg transition duration-200"
                 disabled={loading}
               >
-                {loading ? "Updating..." : "Update Attendance"}
+                {loading ? "Adding ..." : "Add Attendance"}
               </button>
             </div>
           </form>
@@ -168,4 +176,4 @@ const AddTeamAttendance = () => {
   );
 };
 
-export default AddTeamAttendance;
+export default AddMyTeamAttendance;

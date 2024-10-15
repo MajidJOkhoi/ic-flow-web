@@ -21,7 +21,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
 import api from "../../../api";
-import { Download } from "lucide-react";
+import { BookmarkPlus, Download } from "lucide-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -50,6 +50,9 @@ const AttendanceDetails = () => {
       console.log(response.data.monthAttendance)
 
       if (response.data.success && response.data.monthAttendance.length > 0) {
+        const sortedData = response.data.monthAttendance.sort((a, b) => new Date(a.date) - new Date(b.date));
+        console.log(sortedData);
+ 
         setAttendanceData(response.data.monthAttendance);
       } else {
         toast.error("No Record Available for the selected month.");
@@ -193,7 +196,6 @@ const AttendanceDetails = () => {
 
           <div className="flex justify-end mb-4 space-x-4">
             
-            <div></div>
 
             <button
               onClick={DownloadPDFReport}
@@ -202,6 +204,20 @@ const AttendanceDetails = () => {
               <Download size={20} className="text-blue-600 mr-2" />
               Attedance Report PDF
             </button>
+
+            <button
+              onClick={() => {
+                navigate(`/dashboard/admin/addattendance/${id}`);
+              }}
+              className="flex items-center justify-center px-4 py-2 rounded-lg font-bold border border-green-500 text-blue-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-150 ease-in-out"
+            >
+              <BookmarkPlus size={20} className="h-6 w-6" />
+              Add Attendance
+            </button>
+     
+
+
+            
           </div>
 
           <div className="flex justify-end items-center mb-6">
