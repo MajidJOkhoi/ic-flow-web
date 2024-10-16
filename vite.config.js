@@ -6,6 +6,11 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   base: './',
+  build: {
+    rollupOptions: {
+      input: '/index.html'
+    }
+  },
   server: {
     proxy: {
       "/api":"https://flow-backend-ic-production-932b.up.railway.app"
