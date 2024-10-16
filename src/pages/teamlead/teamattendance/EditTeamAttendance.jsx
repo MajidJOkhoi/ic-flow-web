@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from '../../../api';
 
 const EditTeamAttendance = () => {
@@ -21,6 +21,7 @@ const EditTeamAttendance = () => {
   const { id } = useParams();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const convertTo12HourFormat = (time) => {
     let [hours, minutes] = time.split(':');
@@ -78,6 +79,7 @@ const EditTeamAttendance = () => {
 
       if (response.data.success) {
         toast.success("Attendance updated successfully!");
+        navigate(`/dashboard/teamlead/attendance`)
       } else {
         toast.error("Failed to update attendance.");
       }

@@ -58,8 +58,9 @@ import AbsentTeamMember from "./pages/teamlead/teamattendance/AbsentTeamMember";
 import ViewTodayTeamAttendance from "./pages/teamlead/teamattendance/ViewTodayTeamAttendane";
 import PresentTeamMember from "./pages/teamlead/teamattendance/PresentTeamMember";
 import GetMyAttendance from "./pages/teamlead/teamattendance/GetMyAttendance";
-import EditTeamAttendance from "./pages/teamlead/manageteam/EditTeamAttendance";
 import AddMyTeamAttendance from "./pages/teamlead/teamattendance/AddMyTeamAttendance";
+import EditMyTeamAttendance from "./pages/teamlead/manageteam/EditTeamAttendance";
+
 
 // edit own Profile 
 import EditProfile from "./pages/teamlead/manageteam/EditProfile";
@@ -127,7 +128,7 @@ const router = createBrowserRouter([
             path: "viewtodayteamattendence",
             element: <ViewTodayTeamAttendance />,
           },
-          { path: "edit-team-attendance/:id", element: <EditTeamAttendance /> },
+          { path: "edit-team-attendance/:id", element: <EditMyTeamAttendance /> },
           { path: "absentmembers", element: <AbsentTeamMember /> },
           { path: "presentmembers", element: <PresentTeamMember /> },
           { path: "gettodayattendance", element: <GetMyAttendance /> },

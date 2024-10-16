@@ -83,7 +83,7 @@ const AddMyTeamAttendance = () => {
   
       if (response.data.success) {
         toast.success("Attendance updated successfully!");
-        navigate('/dashboard/teamlead/teamattendencedetails/:id')
+        navigate(`/dashboard/teamlead/teamattendencedetails/${id}`)
         
       } else {
         toast.error("Failed to update attendance.");
