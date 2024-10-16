@@ -43,7 +43,7 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { Skeleton } from "@/components/ui/skeleton";
-import api from '../../../api'
+import api from "../../../api";
 
 const ManageTeam = () => {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ const ManageTeam = () => {
       try {
         setLoading(true);
         const response = await api.get(`/api/user/getMyAllUsers`);
-        console.log(response.data.myUsers);
+   
         if (response.data && response.data.myUsers) {
           const formattedData = response.data.myUsers.map((user) => ({
             _id: user._id,
@@ -356,10 +356,10 @@ const ManageTeam = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem  onClick={() => handleEdit(request._id)}>
-                            
-                              Edit
-                           
+                          <DropdownMenuItem
+                            onClick={() => handleEdit(request._id)}
+                          >
+                            Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             asChild

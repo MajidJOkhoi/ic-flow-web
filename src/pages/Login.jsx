@@ -25,7 +25,7 @@ const Login = () => {
     if (!emailRegex.test(email)) return toast.warning("Please enter a valid email.");
 
     try {
-      setLoading(true); // Set loading to true to disable the button
+      setLoading(true);
       const response = await api.post(`/api/user/login`, { email, password });
 
       if (response.status === 200) {
@@ -101,16 +101,21 @@ const Login = () => {
             </div>
 
             {errorMessage && (
-              <p className="text-red-500 text-center">{errorMessage}</p>
+              <p className="text-red-500  text-center">{errorMessage}</p>
             )}
 
+            <div className="flex justify-center">
+            <div>
+
+            </div>
             <button
               type="submit"
-              className={`w-full ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'} text-white py-2 rounded-md shadow-md transition duration-200`}
+              className={`w-40 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500  hover:bg-red-600'} text-white py-2 rounded-md shadow-md transition duration-200`}
               disabled={loading} 
             >
               {loading ? 'Logging in...' : 'Login'}
             </button>
+            </div>
           </form>
         </div>
       </div>

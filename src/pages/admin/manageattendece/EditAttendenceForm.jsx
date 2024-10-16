@@ -9,18 +9,21 @@ import {
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from '../../../api';
 
-const EditAttendanceForm = () => {
+const EditTeamAttendance = () => {
   const [attendanceData, setAttendanceData] = useState({
     startTime: "",
     endTime: "",
   });
   
   const { id } = useParams();
+ 
+  
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const convertTo12HourFormat = (time) => {
     let [hours, minutes] = time.split(':');
@@ -78,6 +81,8 @@ const EditAttendanceForm = () => {
 
       if (response.data.success) {
         toast.success("Attendance updated successfully!");
+        navigate(`/dashboard/admin/attendance`)
+
       } else {
         toast.error("Failed to update attendance.");
       }
@@ -98,7 +103,7 @@ const EditAttendanceForm = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <Link to={`/dashboard/admin/attendence`}>Attendance</Link>
+            <Link to="/dashboard/admin/attendance">Attendance</Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -168,4 +173,4 @@ const EditAttendanceForm = () => {
   );
 };
 
-export default EditAttendanceForm;
+export default EditTeamAttendance;

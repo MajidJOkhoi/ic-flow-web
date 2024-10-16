@@ -81,7 +81,7 @@ const AddTeamAttendance = () => {
       const response = await api.post(`/api/attendance/markAttendance/${id}`, updatedData);
       if (response.data.success) {
         toast.success("Attendance updated successfully!");
-        navigate('/dashboard/admin/attendencedetails/:id')
+        navigate(`/dashboard/admin/attendencedetails/${id}`)
       
       } else {
         toast.error("Failed to update attendance.");

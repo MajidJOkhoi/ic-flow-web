@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
@@ -104,8 +103,7 @@ const ViewTodayAttendance = () => {
           `/api/attendance/getAllTodayAbsentUsers`
         );
 
-        console.log("Absent Members ", response.data.count);
-
+    
         setAbsent(response.data.count);
       } catch (err) {
         setError("An error occurred while fetching absent users data.");
@@ -121,7 +119,7 @@ const ViewTodayAttendance = () => {
 
         setPresent(response.data.presentUsers.length);
 
-        console.log("Present Memebers ", response.data.presentUsers.length);
+       
       } catch (err) {
         setError("An error occurred while fetching present users data.");
         console.error(err);
