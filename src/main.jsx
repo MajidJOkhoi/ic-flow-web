@@ -71,6 +71,7 @@ import EditProfile from "./pages/teamlead/manageteam/EditProfile";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import Unauthorized from "./pages/Unauthorized";
+import LiveAttendance from "./pages/teamlead/testfeatures/LiveAttendance";
 
 
 const router = createBrowserRouter([
@@ -132,6 +133,7 @@ const router = createBrowserRouter([
           { path: "absentmembers", element: <AbsentTeamMember /> },
           { path: "presentmembers", element: <PresentTeamMember /> },
           { path: "gettodayattendance", element: <GetMyAttendance /> },
+          {path:'LiveAttendance', element:<LiveAttendance /> }
         ],
       },
     ],

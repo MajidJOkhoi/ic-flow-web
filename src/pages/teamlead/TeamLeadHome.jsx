@@ -115,6 +115,12 @@ const TeamLeadHome = () => {
       link: "/dashboard/teamlead/absentmembers",
       icon: <User className="text-[#BA0D09] h-6 w-6" />,
     },
+    {
+      title: "live attendance",
+      value:'2',
+      link: "/dashboard/teamlead/LiveAttendance",
+      icon: <User className="text-[#BA0D09] h-6 w-6" />,
+    },
   ];
 
   return (

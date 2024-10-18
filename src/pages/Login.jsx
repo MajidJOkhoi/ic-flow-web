@@ -3,13 +3,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import api from '../api';
+import logo from "../assets/IC-logo-2.png";
+import api from "../api";
 
 const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -22,7 +23,8 @@ const Login = () => {
     if (!password) return toast.warning("Please enter password");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return toast.warning("Please enter a valid email.");
+    if (!emailRegex.test(email))
+      return toast.warning("Please enter a valid email.");
 
     try {
       setLoading(true);
@@ -48,73 +50,67 @@ const Login = () => {
         toast.error("An unexpected error occurred. Please try again.");
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 rounded-6xl shadow-md">
+    <div
+      className="flex h-screen   items-center justify-center bg-gray-200
+       bg-cover bg-no-repeat"
+    >
       <div
-        className="bg-white rounded-lg shadow-lg flex overflow-hidden"
-        style={{ width: "400px" }}
+        className=" bg-white  rounded-xl bg-opacity-50 px-16 py-10 shadow-2xl backdrop-blur-md max-sm:px-8"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1499123785106-343e69e68db1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1748&q=80')",
+        }}
       >
-        <div className="w-full p-8 rounded-lg">
-          <h2 className="text-3xl font-bold text-center mb-4">Login Form</h2>
-          <p className="text-center text-sm text-gray-600 mb-6">
-            Enter your details to log in to your account.
-          </p>
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
+        <div className="text-black ">
+          <div className="mb-8 flex flex-col items-center">
+            <img src={logo} width="150" className="rounded-md  m-2 mb-10" />
+
+            <span className="text-white ">Enter Login Details</span>
+          </div>
+          <form onSubmit={handleLogin}>
+            <div className="mb-4 text-lg">
               <input
                 ref={emailRef}
-                id="email"
+                className="rounded-3xl border-none  bg-gray-200 px-6 py-2 text-center text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
                 type="email"
                 name="email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="m@example.com"
+                placeholder="id@email.com"
                 required
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
+            <div className="mb-4 text-lg">
               <input
                 ref={passwordRef}
-                id="password"
+                className="rounded-3xl border-none bg-gray-200  px-6 py-2 text-center text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
                 type="password"
                 name="password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Password"
+                placeholder="*********"
                 required
               />
             </div>
 
             {errorMessage && (
-              <p className="text-red-500  text-center">{errorMessage}</p>
+              <p className="text-white text-center">{errorMessage}</p>
             )}
 
-            <div className="flex justify-center">
-            <div>
-
-            </div>
-            <button
-              type="submit"
-              className={`w-40 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500  hover:bg-red-600'} text-white py-2 rounded-md shadow-md transition duration-200`}
-              disabled={loading} 
-            >
-              {loading ? 'Logging in...' : 'Login'}
-            </button>
+            <div className="mt-8 flex justify-center text-lg text-black">
+              <button
+                type="submit"
+                className={`rounded-3xl bg-[#e41f1c]   px-10 py-2 text-white shadow-xl backdrop-blur-md transition-colors duration-300 ${
+                  loading
+                    ? "cursor-not-allowed bg-gray-400"
+                    : "hover:bg-[#e41f1c] "
+                }`}
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
             </div>
           </form>
         </div>
