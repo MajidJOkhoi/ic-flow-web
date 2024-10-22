@@ -7,15 +7,12 @@ function LiveAttendance() {
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkedIn, setCheckedIn] = useState(false);
-  const [todayattendance,setTodayAttendance] = useState({});
+  const [todayattendance, setTodayAttendance] = useState({});
 
   const [attendanceData, setAttendanceData] = useState({
     checkIn: null,
     checkOut: null,
   });
-
-
-  
 
   const getFormattedDate = () => {
     const options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
@@ -34,22 +31,17 @@ function LiveAttendance() {
     return `${hours}:${minutesStr}:${secondsStr} ${ampm}`;
   };
 
-
   const getTodayAttendance = async () => {
-    
     try {
       const date = getFormattedDate();
-      console.log(date)
-    
+      console.log(date);
+
       const response = await api.get(`/api/attendance/getTodayAttendance/${date}`);
-      
-      console.log(response.data.attendance[0].checkIn)
+      console.log(response.data.attendance[0].checkIn);
 
       setTodayAttendance(response.data.attendance[0]);
-
-
     } catch (error) {
-      // setStatus("Error fetching today's attendance: " + error.message);
+      setStatus("Error fetching today's attendance: " + error.message);
       // toast.error("Error fetching today's attendance!");
     }
   };
@@ -76,11 +68,7 @@ function LiveAttendance() {
     } else {
       setStatus("Geolocation is not supported by your browser.");
     }
-
-
   }, []);
-
-  console.log(todayattendance)
 
   const handleCheckIn = async () => {
     const checkInTime = new Date();
@@ -148,7 +136,6 @@ function LiveAttendance() {
     <div className="flex flex-col items-center space-y-6 mt-8">
       <h1 className="text-2xl font-bold">Track and Send Attendance</h1>
 
-
       {location.lat && location.lng ? (
         <p className="text-center">
           <strong>Latitude:</strong> {location.lat}, <strong>Longitude:</strong> {location.lng}
@@ -160,7 +147,8 @@ function LiveAttendance() {
       <div className="flex space-x-8 mt-4">
         {/* Check-In Button */}
 
-        {!todayattendance.checkIn && (
+        {/* Check if checkIn is null or undefined */}
+        {!todayattendance.checkIn || !todayattendance.checkIn.time ? (
           <button
             className={`button ${loading ? "animate-pulse" : ""}`}
             onClick={handleCheckIn}
@@ -175,10 +163,10 @@ function LiveAttendance() {
               />
             </svg>
           </button>
-        )}
+        ) : null}
 
         {/* Check-Out Button */}
-        {!todayattendance.checkOut && (
+        {!todayattendance.checkOut || !todayattendance.checkOut.time ? (
           <button className="button" onClick={handleCheckOut} disabled={loading}>
             Check Out
             <svg fill="currentColor" viewBox="0 0 24 24" className="icon">
@@ -189,13 +177,8 @@ function LiveAttendance() {
               />
             </svg>
           </button>
-        )}
+        ) : null}
       </div>
-
-      {/* <p className={`text-center mt-4 ${status.includes("Error") ? "text-red-500" : "text-green-500"}`}>
-        {status}
-      </p> */}
-      
     </div>
   );
 }

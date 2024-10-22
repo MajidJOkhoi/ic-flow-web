@@ -56,30 +56,31 @@ const Login = () => {
 
   return (
     <div
-      className="flex h-screen   items-center justify-center bg-gray-200
+      className="flex h-screen   items-center justify-center 
        bg-cover bg-no-repeat"
+       style={{
+        backgroundImage:
+          "url('https://media.istockphoto.com/id/2173775846/photo/abstract-background.jpg?s=612x612&w=0&k=20&c=0DF1v_ZYLMtcGd1CbugZssDzgyFUCpEHtp5bmu5c488=')",
+      }}
     >
       <div
-        className=" bg-white  rounded-xl bg-opacity-50 px-16 py-10 shadow-2xl backdrop-blur-md max-sm:px-8"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1499123785106-343e69e68db1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1748&q=80')",
-        }}
+        className=" bg-gray-50 border-2 rounded-xl bg-opacity-50 px-16 py-10 shadow-sm backdrop-blur-md max-sm:px-8"
+        
       >
         <div className="text-black ">
           <div className="mb-8 flex flex-col items-center">
             <img src={logo} width="150" className="rounded-md  m-2 mb-10" />
 
-            <span className="text-white ">Enter Login Details</span>
+            <span className="font-bold">Enter Login Details</span>
           </div>
           <form onSubmit={handleLogin}>
             <div className="mb-4 text-lg">
               <input
                 ref={emailRef}
-                className="rounded-3xl border-none  bg-gray-200 px-6 py-2 text-center text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
+                className="rounded-xl border-none  bg-gray-200 px-6 py-2  text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
                 type="email"
                 name="email"
-                placeholder="id@email.com"
+                placeholder="Email"
                 required
               />
             </div>
@@ -87,10 +88,10 @@ const Login = () => {
             <div className="mb-4 text-lg">
               <input
                 ref={passwordRef}
-                className="rounded-3xl border-none bg-gray-200  px-6 py-2 text-center text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
+                className="rounded-xl border-none bg-gray-200  px-6 py-2  text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
                 type="password"
                 name="password"
-                placeholder="*********"
+                placeholder="Password"
                 required
               />
             </div>
