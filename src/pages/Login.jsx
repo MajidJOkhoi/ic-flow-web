@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import logo from "../assets/IC-logo-2.png";
+import logo from "../assets/IC-logo.png";
 import api from "../api";
 
 const Login = () => {
@@ -72,7 +72,7 @@ const Login = () => {
       >
         <div className="text-black ">
           <div className="mb-8 flex flex-col items-center">
-            <img src={logo} width="150" className="rounded-md  m-2 mb-10" />
+            <img src={logo} width="170" className="rounded-md  m-2 mb-10" />
 
             <span className="font-bold">Enter Login Details</span>
           </div>
