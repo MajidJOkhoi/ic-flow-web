@@ -57,14 +57,17 @@ const Login = () => {
   return (
     <div
       className="flex h-screen   items-center justify-center 
-       bg-cover bg-no-repeat"
+       bg-cover"
        style={{
-        backgroundImage:
-          "url('https://media.istockphoto.com/id/2173775846/photo/abstract-background.jpg?s=612x612&w=0&k=20&c=0DF1v_ZYLMtcGd1CbugZssDzgyFUCpEHtp5bmu5c488=')",
-      }}
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1493723843671-1d655e66ac1c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+          width: '100%',
+          backgroundSize: 'cover', 
+        
+        }}
     >
       <div
-        className=" bg-gray-50 border-2 rounded-xl bg-opacity-50 px-16 py-10 shadow-sm backdrop-blur-md max-sm:px-8"
+        className=" bg-gray-100 shadow-md border-2 rounded-xl px-16 py-10  backdrop-blur-md max-sm:px-8"
         
       >
         <div className="text-black ">
@@ -77,7 +80,7 @@ const Login = () => {
             <div className="mb-4 text-lg">
               <input
                 ref={emailRef}
-                className="rounded-xl border-none  bg-gray-200 px-6 py-2  text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
+                className="rounded-xl border-2 hover:border-gray-300  bg-gray-200 px-6 py-2  text-inherit  shadow-lg outline-none backdrop-blur-md"
                 type="email"
                 name="email"
                 placeholder="Email"
@@ -88,7 +91,7 @@ const Login = () => {
             <div className="mb-4 text-lg">
               <input
                 ref={passwordRef}
-                className="rounded-xl border-none bg-gray-200  px-6 py-2  text-inherit placeholder-slate-400 shadow-lg outline-none backdrop-blur-md"
+                className="rounded-xl border-2 hover:border-gray-300  bg-gray-200 px-6 py-2  text-inherit  shadow-lg outline-none backdrop-blur-md"
                 type="password"
                 name="password"
                 placeholder="Password"
@@ -97,7 +100,7 @@ const Login = () => {
             </div>
 
             {errorMessage && (
-              <p className="text-white text-center">{errorMessage}</p>
+              <p className="text-red-500 text-center">{errorMessage}</p>
             )}
 
             <div className="mt-8 flex justify-center text-lg text-black">
